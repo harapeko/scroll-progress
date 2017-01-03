@@ -7,7 +7,8 @@ Scroll progress is always displayed at the bottom left.
 
 When is the timing?
 
-load, scroll event.
+- load event
+- scroll event
 
 Screenshot
 ----------
@@ -15,6 +16,14 @@ Screenshot
 ![screenshot](http://i.imgur.com/BG4nZrK.png)
 
 The progress is shown at the lower left corner of the window.
+
+Howto
+-----
+
+Open your chrome extensions. `chrome://extensions/`
+
+![howto](http://i.imgur.com/2a9qDaL.png)
+
 
 Thanks
 ------
