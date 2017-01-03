@@ -1,8 +1,13 @@
 Scroll Progress
 ===============
 
-A small chrome extension showing the scroll progress of current page.  
-Useful when reading a looooooooooong article.
+A small chrome extension showing the scroll progress of current page.
+
+Scroll progress is always displayed at the bottom left.
+
+When is the timing?
+
+load, scroll event.
 
 Screenshot
 ----------
@@ -16,12 +21,14 @@ Thanks
 
 https://github.com/adamzap/scroll-progress
 
+https://github.com/qiao/scroll-progress
+
 License
 -------
 
 [MIT License](http://www.opensource.org/licenses/mit-license.php)
 
-&copy; 2014 Xueqiao Xu &lt;xueqiaoxu@gmail.com&gt;
+&copy; 2017 [harapeko](https://twitter.com/harapeko_wktk)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

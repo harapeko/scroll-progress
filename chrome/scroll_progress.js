@@ -63,6 +63,7 @@ function debounce(func, wait, immediate) {
 // Creates the indicator, which is a small div lying in the lower left corner
 // of the window, showing the scroll progress.
 var indicator = document.createElement('div');
+indicator.innerHTML = ' %';
 indicator.style.position = 'fixed';
 indicator.style.left = '0';
 indicator.style.bottom = '0';
@@ -73,27 +74,17 @@ indicator.style.lineHeight = '1.2';
 indicator.style.background = '#eee';
 indicator.style.border = '1px solid #aaa';
 indicator.style.borderRadius = '0 3px 0 0';
-indicator.style.opacity = '0';
 document.body.appendChild(indicator);
-
-function show() {
-  indicator.style.opacity = '1';
-}
-
-function hide() {
-  indicator.style.opacity = '0';
-}
 
 // Creates a debounced version of the hide function, so that the indicator
 // should be hide only when there's no scroll activity for 300ms.
-var debouncedHide = debounce(hide, 300);
 
 function scrollHandler() {
   var progress = document.body.scrollTop / (document.body.scrollHeight - window.innerHeight) * 100;
   progress = Math.round(Math.max(Math.min(progress, 100), 0));
   indicator.innerHTML = progress + ' %';
-  show();
-  debouncedHide();
 }
 
-document.addEventListener('scroll', throttle(scrollHandler, 100));
+// 「window」for 'load' of webkit. 「document」 is not wokr 'load' on webkit.
+window.addEventListener('load', throttle(scrollHandler, 0));
+window.addEventListener('scroll', throttle(scrollHandler, 100));
