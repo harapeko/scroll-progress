@@ -74,7 +74,6 @@ indicator.style.lineHeight = '1.2';
 indicator.style.background = '#eee';
 indicator.style.border = '1px solid #aaa';
 indicator.style.borderRadius = '0 3px 0 0';
-document.body.appendChild(indicator);
 
 // Creates a debounced version of the hide function, so that the indicator
 // should be hide only when there's no scroll activity for 300ms.
@@ -85,6 +84,11 @@ function scrollHandler() {
   indicator.innerHTML = progress + ' %';
 }
 
-// 「window」for 'load' of webkit. 「document」 is not wokr 'load' on webkit.
-window.addEventListener('load', throttle(scrollHandler, 0));
-window.addEventListener('scroll', throttle(scrollHandler, 100));
+// bodyがスクロールできる時のみ動作させる
+if (getComputedStyle(document.body).overflowY != 'auto') {
+  document.body.appendChild(indicator);
+
+  // 「window」for 'load' of webkit. 「document」 is not wokr 'load' on webkit.
+  window.addEventListener('load', throttle(scrollHandler, 0));
+  window.addEventListener('scroll', throttle(scrollHandler, 100));
+}

@@ -24,6 +24,13 @@ Open your chrome extensions. `chrome://extensions/`
 
 ![howto](http://i.imgur.com/2a9qDaL.png)
 
+Incompatible
+------------
+- `body` scrollTop() always returns 0.
+ex) http://devdocs.io/
+This site's `body` is `overflow: auto`.
+In other words `body` scroll not work.
+Do not run this extention.
 
 Thanks
 ------
