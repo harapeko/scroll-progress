@@ -60,10 +60,14 @@ function debounce(func, wait, immediate) {
   };
 }
 
+// スクロール率
+var progress = 0;
+
 // Creates the indicator, which is a small div lying in the lower left corner
 // of the window, showing the scroll progress.
 var indicator = document.createElement('div');
-indicator.innerHTML = ' %';
+indicator.setAttribute('id', 'extention-scroll_progress');
+indicator.innerHTML = progress + ' %';
 indicator.style.position = 'fixed';
 indicator.style.left = '0';
 indicator.style.bottom = '0';
@@ -79,15 +83,24 @@ indicator.style.borderRadius = '0 3px 0 0';
 // should be hide only when there's no scroll activity for 300ms.
 
 function scrollHandler() {
-  var progress = document.body.scrollTop / (document.body.scrollHeight - window.innerHeight) * 100;
+  scroll_top = document.body.scrollTop;
+  degree_height = (document.body.scrollHeight - window.innerHeight);
+
+  if ( degree_height === 0 && degree_height === 0) {
+    return false;
+  }
+
+  if ( !document.getElementById('extention-scroll_progress') ) {
+    document.body.appendChild(indicator);
+  }
+
+  progress = scroll_top / degree_height * 100;
   progress = Math.round(Math.max(Math.min(progress, 100), 0));
   indicator.innerHTML = progress + ' %';
 }
 
 // bodyがスクロールできる時のみ動作させる
 if (getComputedStyle(document.body).overflowY != 'auto') {
-  document.body.appendChild(indicator);
-
   // 「window」for 'load' of webkit. 「document」 is not wokr 'load' on webkit.
   window.addEventListener('load', throttle(scrollHandler, 0));
   window.addEventListener('scroll', throttle(scrollHandler, 100));
