@@ -22,22 +22,30 @@ Howto
 
 Open your chrome extensions. `chrome://extensions/`
 
-![howto](http://i.imgur.com/2a9qDaL.png)
+![howto](http://i.imgur.com/cdA5pl3.png)
 
 Incompatible
 ------------
 - `body` scrollTop() always returns 0.
+
 ex) http://devdocs.io/
+
 This site's `body` is `overflow: auto`.
+
 In other words `body` scroll not work.
+
 Do not run this extention.
 
 - `load` event not display.
+
 ex) https://feedly.com/i/welcome
+
 maybe, view override...?
 
 - Site's original JS reseize Fixing.
+
 ex) http://demos.telerik.com/kendo-ui/mvvm/
+
 `#main` is Fixing.
 
 Thanks
