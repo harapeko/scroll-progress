@@ -17,12 +17,10 @@ Screenshot
 
 The progress is shown at the lower left corner of the window.
 
-Howto
+Install
 -----
 
-Open your chrome extensions. `chrome://extensions/`
-
-![howto](http://i.imgur.com/cdA5pl3.png)
+[chrome web store](https://chrome.google.com/webstore/detail/lcmhhnccfbeinmgacmomlkcahidhjifb/publish-accepted?hl=ja)
 
 Incompatible
 ------------
