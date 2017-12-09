@@ -83,10 +83,14 @@ indicator.style.borderRadius = '0 3px 0 0';
 // should be hide only when there's no scroll activity for 300ms.
 
 function scrollHandler() {
-  scroll_top = document.body.scrollTop;
+  scroll_top = document.scrollingElement.scrollTop;
   degree_height = (document.body.scrollHeight - window.innerHeight);
+  // console.log("scroll_top: " + scroll_top);
+  // console.log("document.body.scrollHeight: " + document.body.scrollHeight);
+  // console.log("window.innerHeight:" + window.innerHeight);
+  // console.log("degree_height: " +degree_height);
 
-  if ( degree_height === 0 && degree_height === 0) {
+  if ( degree_height === 0) {
     return false;
   }
 
@@ -97,6 +101,8 @@ function scrollHandler() {
   progress = scroll_top / degree_height * 100;
   progress = Math.round(Math.max(Math.min(progress, 100), 0));
   indicator.innerHTML = progress + ' %';
+
+  // console.log(progress);
 }
 
 // bodyがスクロールできる時のみ動作させる
