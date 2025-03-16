@@ -61,12 +61,12 @@ function debounce(func, wait, immediate) {
 }
 
 // スクロール率
-var progress = 0;
+let progress = 0;
 
 // Creates the indicator, which is a small div lying in the lower left corner
 // of the window, showing the scroll progress.
-var indicator = document.createElement('div');
-indicator.setAttribute('id', 'extention-scroll_progress');
+let indicator = document.createElement('div');
+indicator.setAttribute('id', 'extension-scroll_progress');
 indicator.innerHTML = progress + ' %';
 indicator.style.position = 'fixed';
 indicator.style.left = '0';
@@ -83,8 +83,8 @@ indicator.style.borderRadius = '0 3px 0 0';
 // should be hide only when there's no scroll activity for 300ms.
 
 function scrollHandler() {
-  scroll_top = document.scrollingElement.scrollTop;
-  degree_height = (document.body.scrollHeight - window.innerHeight);
+  const scroll_top = document.scrollingElement.scrollTop;
+  const degree_height = (document.body.scrollHeight - window.innerHeight);
   // console.log("scroll_top: " + scroll_top);
   // console.log("document.body.scrollHeight: " + document.body.scrollHeight);
   // console.log("window.innerHeight:" + window.innerHeight);
@@ -94,7 +94,7 @@ function scrollHandler() {
     return false;
   }
 
-  if ( !document.getElementById('extention-scroll_progress') ) {
+  if ( !document.getElementById('extension-scroll_progress') ) {
     document.body.appendChild(indicator);
   }
 
@@ -106,8 +106,8 @@ function scrollHandler() {
 }
 
 // bodyがスクロールできる時のみ動作させる
-if (getComputedStyle(document.body).overflowY != 'auto') {
-  // 「window」for 'load' of webkit. 「document」 is not wokr 'load' on webkit.
+if (getComputedStyle(document.body).overflowY !== 'auto') {
+  // 「window」for 'load' of webkit. 「document」 is not work 'load' on webkit.
   window.addEventListener('load', throttle(scrollHandler, 0));
   window.addEventListener('scroll', throttle(scrollHandler, 100));
 }
