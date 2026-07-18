@@ -2,6 +2,9 @@
   "name": "scroll-progress",
   "private": true,
   "description": "Chrome extension showing the scroll progress of the current page.",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "syntax": "find scroll_progress -name \"*.js\" -print0 | xargs -0 -n 1 sh -c 'node --check < \"$0\"'",
     "test": "node --test",

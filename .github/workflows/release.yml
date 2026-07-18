@@ -1,0 +1,92 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Publish after upload'
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+env:
+  CHROME_EXTENSION_ID: lcmhhnccfbeinmgacmomlkcahidhjifb
+
+jobs:
+  chrome-web-store:
+    runs-on: ubuntu-latest
+    environment: chrome-web-store
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify and package
+        run: npm run verify
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: extension
+          path: scroll_progress.zip
+          if-no-files-found: error
+
+      - name: Request access token
+        id: token
+        env:
+          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+        run: |
+          response="$(curl --silent --show-error \
+            --request POST https://oauth2.googleapis.com/token \
+            --data-urlencode "client_id=${CHROME_CLIENT_ID}" \
+            --data-urlencode "client_secret=${CHROME_CLIENT_SECRET}" \
+            --data-urlencode "refresh_token=${CHROME_REFRESH_TOKEN}" \
+            --data-urlencode "grant_type=refresh_token")"
+
+          access_token="$(node -e "const fs = require('node:fs'); const json = JSON.parse(fs.readFileSync(0, 'utf8')); process.stdout.write(json.access_token || '');" <<< "$response")"
+          if [ -z "$access_token" ]; then
+            echo "$response" | node -e "const fs = require('node:fs'); const json = JSON.parse(fs.readFileSync(0, 'utf8')); console.error(json.error || 'access token was not returned'); if (json.error_description) console.error(json.error_description);"
+            exit 1
+          fi
+
+          echo "::add-mask::$access_token"
+          echo "access_token=$access_token" >> "$GITHUB_OUTPUT"
+
+      - name: Upload to Chrome Web Store
+        env:
+          ACCESS_TOKEN: ${{ steps.token.outputs.access_token }}
+          CHROME_PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
+        run: |
+          curl --fail-with-body --silent --show-error \
+            --request POST \
+            --header "Authorization: Bearer ${ACCESS_TOKEN}" \
+            --upload-file scroll_progress.zip \
+            "https://chromewebstore.googleapis.com/upload/v2/publishers/${CHROME_PUBLISHER_ID}/items/${CHROME_EXTENSION_ID}:upload"
+
+      - name: Publish to Chrome Web Store
+        if: ${{ github.event_name == 'push' || inputs.publish }}
+        env:
+          ACCESS_TOKEN: ${{ steps.token.outputs.access_token }}
+          CHROME_PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
+        run: |
+          curl --fail-with-body --silent --show-error \
+            --request POST \
+            --header "Authorization: Bearer ${ACCESS_TOKEN}" \
+            "https://chromewebstore.googleapis.com/v2/publishers/${CHROME_PUBLISHER_ID}/items/${CHROME_EXTENSION_ID}:publish"
