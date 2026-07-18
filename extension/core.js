@@ -125,18 +125,6 @@
   }
 
   /**
-   * ページ本文の選択やコピーに、拡張の表示文字を混ぜない。
-   *
-   * @param {IndicatorSelectionElement} element
-   */
-  function keepIndicatorOutOfPageSelection(element) {
-    element.setAttribute('aria-hidden', 'true')
-    element.style.pointerEvents = 'none'
-    element.style.userSelect = 'none'
-    element.style.webkitUserSelect = 'none'
-  }
-
-  /**
    * 指定時間内の呼び出し回数を抑える。
    *
    * @param {() => void} callback
@@ -181,7 +169,6 @@
     createToggleResponse,
     getBadgeText,
     getIndicatorText,
-    keepIndicatorOutOfPageSelection,
     isToggleMessage,
     readEnabledResponse,
     shouldAttachIndicator,

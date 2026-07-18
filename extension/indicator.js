@@ -10,7 +10,8 @@
    */
   function create() {
     const element = document.createElement('div')
-    element.setAttribute('id', core.INDICATOR_ID)
+    element.id = core.INDICATOR_ID
+    element.setAttribute('aria-hidden', 'true')
     element.textContent = core.getIndicatorText(0)
     element.style.position = 'fixed'
     element.style.left = '0'
@@ -22,7 +23,9 @@
     element.style.background = '#eee'
     element.style.border = '1px solid #aaa'
     element.style.borderRadius = '0 3px 0 0'
-    core.keepIndicatorOutOfPageSelection(element)
+    element.style.pointerEvents = 'none'
+    element.style.userSelect = 'none'
+    element.style.webkitUserSelect = 'none'
 
     return element
   }
@@ -33,7 +36,7 @@
    * @param {HTMLElement} element
    */
   function show(element) {
-    if (!document.getElementById(core.INDICATOR_ID)) {
+    if (!element.isConnected) {
       document.body.appendChild(element)
     }
   }
@@ -44,9 +47,7 @@
    * @param {HTMLElement} element
    */
   function hide(element) {
-    if (element.parentNode) {
-      element.parentNode.removeChild(element)
-    }
+    element.remove()
   }
 
   /**
@@ -61,9 +62,9 @@
 
   // noinspection JSUnusedGlobalSymbols -- manifest経由で別scriptから参照する。
   global.ScrollProgressIndicator = {
-    create: create,
-    hide: hide,
-    show: show,
-    update: update,
+    create,
+    hide,
+    show,
+    update,
   }
 })(globalThis)

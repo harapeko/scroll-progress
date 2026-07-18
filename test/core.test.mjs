@@ -168,25 +168,6 @@ test('getIndicatorTextは進捗値に単位を付ける', () => {
   assert.equal(core.getIndicatorText(100), '100 %')
 })
 
-test('keepIndicatorOutOfPageSelectionは拡張表示を本文コピーから外しやすくする', () => {
-  const attributes = new Map()
-  /** @type {IndicatorSelectionElement} */
-  // noinspection JSUnusedGlobalSymbols -- 評価対象へ渡す要素のfixture。
-  const element = {
-    setAttribute(name, value) {
-      attributes.set(name, value)
-    },
-    style: {},
-  }
-
-  core.keepIndicatorOutOfPageSelection(element)
-
-  assert.equal(attributes.get('aria-hidden'), 'true')
-  assert.equal(element.style.pointerEvents, 'none')
-  assert.equal(element.style.userSelect, 'none')
-  assert.equal(element.style.webkitUserSelect, 'none')
-})
-
 test('throttleは先頭を即時実行し連続呼び出しを末尾1回にまとめる', () => {
   const fixture = createThrottleFixture()
   /** @type {number[]} */

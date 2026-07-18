@@ -11,15 +11,6 @@ declare global {
     scrollingElement?: ScrollProgressElement | null
   }
 
-  interface IndicatorSelectionElement {
-    setAttribute(name: string, value: string): void
-    style: {
-      pointerEvents?: string
-      userSelect?: string
-      webkitUserSelect?: string
-    }
-  }
-
   interface ScrollProgressCoreApi {
     readonly INDICATOR_ID: string
     calculateDocumentProgress(
@@ -36,7 +27,6 @@ declare global {
     getBadgeText(enabled: boolean): string
     getIndicatorText(progress: number): string
     isToggleMessage(message: unknown): boolean
-    keepIndicatorOutOfPageSelection(element: IndicatorSelectionElement): void
     readEnabledResponse(response: unknown): boolean | null
     shouldAttachIndicator(bodyStyle: { overflowY: string }): boolean
     throttle(callback: () => void, wait: number): () => void

@@ -101,12 +101,12 @@ extension内の各関数を、責務、入力、戻り値、所有moduleが読�
 | No. | Mission | 状態 | 依存 | 備考 |
 |---:|---|---|---|---|
 | 1 | coreの公開契約と判定を絞る | 完了 | なし | message/responseを含む |
-| 2 | indicatorへDOM責務を集める | 未着手 | Mission 1 | 直接テストを追加 |
+| 2 | indicatorへDOM責務を集める | 完了 | Mission 1 | 直接テストを追加 |
 | 3 | adapter関数を整理する | 未着手 | Mission 1, 2 | content/background/badge |
 
 ## 現在のMission
 
-Mission 1は完了。次はMission 2を実行する。
+Mission 2は完了。次はMission 3を実行する。
 
 ## 未確定事項
 
@@ -119,3 +119,4 @@ Mission 1は完了。次はMission 2を実行する。
 - function宣言は名前付きstack traceと既存形式を保てるため、一括してarrow functionへ変えない。
 - 1回しか発火しないeventへwait 0のthrottleは使わない。
 - Mission 1では、toggle responseをboolean契約へ絞り、production未使用の公開項目を外した。
+- Mission 2では、indicator固有のDOM設定を生成処理へ戻し、indicator APIを直接テストした。
