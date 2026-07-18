@@ -27,7 +27,42 @@
     return element
   }
 
+  /**
+   * まだページにない場合だけ表示する。
+   *
+   * @param {HTMLElement} element
+   */
+  function show(element) {
+    if (!document.getElementById(core.INDICATOR_ID)) {
+      document.body.appendChild(element)
+    }
+  }
+
+  /**
+   * 表示中の進捗表示を外す。
+   *
+   * @param {HTMLElement} element
+   */
+  function hide(element) {
+    if (element.parentNode) {
+      element.parentNode.removeChild(element)
+    }
+  }
+
+  /**
+   * 表示するパーセント値を反映する。
+   *
+   * @param {HTMLElement} element
+   * @param {number} progress
+   */
+  function update(element, progress) {
+    element.textContent = progress + ' %'
+  }
+
   global.ScrollProgressIndicator = {
     create: create,
+    hide: hide,
+    show: show,
+    update: update,
   }
 })(globalThis)

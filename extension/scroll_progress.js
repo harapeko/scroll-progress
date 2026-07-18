@@ -2,20 +2,9 @@
   'use strict'
 
   var core = globalThis.ScrollProgressCore
-  var indicator = globalThis.ScrollProgressIndicator.create()
+  var indicator = globalThis.ScrollProgressIndicator
+  var indicatorElement = indicator.create()
   var enabled = true
-
-  function showIndicator() {
-    if (!document.getElementById(core.INDICATOR_ID)) {
-      document.body.appendChild(indicator)
-    }
-  }
-
-  function hideIndicator() {
-    if (indicator.parentNode) {
-      indicator.parentNode.removeChild(indicator)
-    }
-  }
 
   function updateProgress() {
     if (!enabled) {
@@ -33,15 +22,15 @@
       return
     }
 
-    showIndicator()
-    indicator.textContent = progress + ' %'
+    indicator.show(indicatorElement)
+    indicator.update(indicatorElement, progress)
   }
 
   function applyEnabled(value) {
     enabled = core.normalizeEnabled(value)
 
     if (!enabled) {
-      hideIndicator()
+      indicator.hide(indicatorElement)
       return
     }
 
