@@ -71,12 +71,13 @@ Scroll Progressを、手作業zipに依存せず検証・パッケージでき�
 | 1 | 作業管理とpackage生成基盤を整える | 完了 | なし | プロダクト挙動は変えない |
 | 2 | スクロール進捗ロジックをテスト可能に整理する | 完了 | Mission 1 | 表示仕様は変えない |
 | 3 | Chrome Web Store向けzip構造に直す | 完了 | Mission 1 | manifestをzipルートへ置く |
+| 4 | ページ全体コピー時に進捗表示を混ぜない | 完了 | Mission 2 | 表示文字は変えない |
 
 Mission一覧は初期仮説として扱う。実装結果に応じて追加、分割、統合、並べ替えを行ってよい。ただし、完了済みMissionの意味を後から別の成果へ変更しないこと。
 
 ## 現在のMission
 
-Mission 3は完了。次のMissionは未定。
+Mission 4は完了。次のMissionは未定。
 
 ## 未確定事項
 
@@ -88,3 +89,4 @@ Mission 3は完了。次のMissionは未定。
 - まず依存追加なしのnpm scriptsで、syntax checkとzip生成だけを整える。
 - Mission 2では、進捗計算を `core.js` に分け、Node標準テストで固定した。未使用の `activeTab` 権限は削除した。
 - Mission 3では、Chrome Web Storeへuploadしやすいように `manifest.json` がzipルートへ入るpackage構造に直した。
+- Mission 4では、進捗表示の `div` に選択除外と操作透過の指定を追加した。

@@ -29,3 +29,20 @@ test('shouldAttachIndicatorはbody overflow autoを既存どおり除外する',
   assert.equal(core.shouldAttachIndicator({ overflowY: 'auto' }), false)
   assert.equal(core.shouldAttachIndicator({ overflowY: 'visible' }), true)
 })
+
+test('keepIndicatorOutOfPageSelectionは拡張表示を本文コピーから外しやすくする', () => {
+  const attributes = new Map()
+  const element = {
+    setAttribute(name, value) {
+      attributes.set(name, value)
+    },
+    style: {},
+  }
+
+  core.keepIndicatorOutOfPageSelection(element)
+
+  assert.equal(attributes.get('aria-hidden'), 'true')
+  assert.equal(element.style.pointerEvents, 'none')
+  assert.equal(element.style.userSelect, 'none')
+  assert.equal(element.style.webkitUserSelect, 'none')
+})

@@ -23,6 +23,7 @@
     element.style.background = '#eee'
     element.style.border = '1px solid #aaa'
     element.style.borderRadius = '0 3px 0 0'
+    core.keepIndicatorOutOfPageSelection(element)
 
     return element
   }

@@ -34,6 +34,18 @@
   }
 
   /**
+   * ページ本文の選択やコピーに、拡張の表示文字を混ぜない。
+   *
+   * @param {{ setAttribute: Function, style: Object }} element
+   */
+  function keepIndicatorOutOfPageSelection(element) {
+    element.setAttribute('aria-hidden', 'true')
+    element.style.pointerEvents = 'none'
+    element.style.userSelect = 'none'
+    element.style.webkitUserSelect = 'none'
+  }
+
+  /**
    * 指定時間内の呼び出し回数を抑える。
    *
    * @param {Function} callback
@@ -70,6 +82,7 @@
   global.ScrollProgressCore = {
     INDICATOR_ID: INDICATOR_ID,
     calculateProgress: calculateProgress,
+    keepIndicatorOutOfPageSelection: keepIndicatorOutOfPageSelection,
     shouldAttachIndicator: shouldAttachIndicator,
     throttle: throttle,
   }
