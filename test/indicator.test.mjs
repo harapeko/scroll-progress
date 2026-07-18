@@ -73,17 +73,24 @@ test('indicatorは表示に必要な属性とstyleを設定する', () => {
   assert.equal(element.textContent, '0 %')
   assert.equal(attributes.get('aria-hidden'), 'true')
   assert.deepEqual(element.style, {
+    all: 'initial',
     background: '#eee',
     border: '1px solid #aaa',
     borderRadius: '0 3px 0 0',
     bottom: '0',
+    boxSizing: 'border-box',
+    color: '#111',
+    direction: 'ltr',
+    fontFamily: 'Arial, sans-serif',
     fontSize: '9px',
+    fontWeight: '400',
     left: '0',
     lineHeight: '1.2',
     padding: '3px',
     pointerEvents: 'none',
     position: 'fixed',
     userSelect: 'none',
+    whiteSpace: 'nowrap',
     zIndex: '99999999',
   })
 })

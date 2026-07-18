@@ -13,13 +13,20 @@
     element.id = core.INDICATOR_ID
     element.setAttribute('aria-hidden', 'true')
     element.textContent = core.getIndicatorText(0)
+    element.style.all = 'initial'
     element.style.position = 'fixed'
     element.style.left = '0'
     element.style.bottom = '0'
     element.style.zIndex = '99999999'
+    element.style.boxSizing = 'border-box'
     element.style.padding = '3px'
+    element.style.color = '#111'
+    element.style.fontFamily = 'Arial, sans-serif'
     element.style.fontSize = '9px'
+    element.style.fontWeight = '400'
     element.style.lineHeight = '1.2'
+    element.style.direction = 'ltr'
+    element.style.whiteSpace = 'nowrap'
     element.style.background = '#eee'
     element.style.border = '1px solid #aaa'
     element.style.borderRadius = '0 3px 0 0'
