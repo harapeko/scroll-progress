@@ -23,6 +23,11 @@ Install
 
 [Chrome Web Store](https://chromewebstore.google.com/detail/scroll-progress/lcmhhnccfbeinmgacmomlkcahidhjifb)
 
+Privacy
+-------
+
+[Privacy Policy](./PRIVACY.md)
+
 Incompatible
 ------------
 - `body` scrollTop() always returns 0.
