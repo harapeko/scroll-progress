@@ -95,7 +95,7 @@ WebStormとリポジトリ内の型検査が、extensionコードとNodeテス�
 
 | No. | Mission | 状態 | 依存 | 備考 |
 |---:|---|---|---|---|
-| 1 | `var` を `const` と `let` へ置き換える | 未着手 | なし | 実行挙動は変えない |
+| 1 | `var` を `const` と `let` へ置き換える | 完了 | なし | 実行挙動は変えない |
 | 2 | JavaScript型検査の基盤を追加する | 未着手 | Mission 1 | Chrome/Node型とtypecheck script |
 | 3 | global APIとVM fixtureの型警告を解消する | 未着手 | Mission 2 | 動的連携を型で明示する |
 | 4 | 静的解析とpackage生成を通しで確認する | 未着手 | Mission 3 | IDE向け抑制の範囲も確認する |
@@ -104,7 +104,7 @@ Mission一覧は初期仮説として扱う。実装結果に応じて追加、�
 
 ## 現在のMission
 
-Grand Order 3を発令。次のMissionはMission 1を候補にする。
+Mission 1は完了。次のMissionはMission 2を候補にする。
 
 ## 未確定事項
 
@@ -116,3 +116,4 @@ Grand Order 3を発令。次のMissionはMission 1を候補にする。
 - IDE側だけのライブラリ設定ではなく、リポジトリ内で再現できる型検査を採用する。
 - 型情報とcompilerはdevDependenciesとし、extensionの実行物には含めない。
 - Tweet Pageで利用中の `checkJs` 構成を基準にし、Scroll Progressのglobal script構成へ合わせる。
+- Mission 1では、再代入しない値を `const`、状態を持つ値を `let` へ置き換えた。

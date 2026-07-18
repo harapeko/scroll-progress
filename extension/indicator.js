@@ -1,7 +1,7 @@
 ;(function (global) {
   'use strict'
 
-  var core = global.ScrollProgressCore
+  const core = global.ScrollProgressCore
 
   /**
    * 画面左下に出す小さな進捗表示を作る。
@@ -9,7 +9,7 @@
    * @returns {HTMLDivElement}
    */
   function create() {
-    var element = document.createElement('div')
+    const element = document.createElement('div')
     element.setAttribute('id', core.INDICATOR_ID)
     element.textContent = core.getIndicatorText(0)
     element.style.position = 'fixed'

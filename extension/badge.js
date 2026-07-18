@@ -1,7 +1,7 @@
 ;(function (global) {
   'use strict'
 
-  var core = global.ScrollProgressCore
+  const core = global.ScrollProgressCore
 
   function update(tabId, enabled) {
     chrome.action.setBadgeBackgroundColor({ color: '#666666', tabId: tabId })

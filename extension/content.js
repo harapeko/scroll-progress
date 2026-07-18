@@ -1,10 +1,10 @@
 ;(function () {
   'use strict'
 
-  var core = globalThis.ScrollProgressCore
-  var indicator = globalThis.ScrollProgressIndicator
-  var indicatorElement = indicator.create()
-  var enabled = true
+  const core = globalThis.ScrollProgressCore
+  const indicator = globalThis.ScrollProgressIndicator
+  const indicatorElement = indicator.create()
+  let enabled = true
 
   /**
    * 現在位置をindicatorへ反映する。
@@ -14,7 +14,7 @@
       return
     }
 
-    var progress = core.calculateDocumentProgress(document, window)
+    const progress = core.calculateDocumentProgress(document, window)
 
     if (progress === null) {
       return

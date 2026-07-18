@@ -1,8 +1,8 @@
 ;(function (global) {
   'use strict'
 
-  var INDICATOR_ID = 'extension-scroll_progress'
-  var TOGGLE_MESSAGE_TYPE = 'toggle-scroll-progress'
+  const INDICATOR_ID = 'extension-scroll_progress'
+  const TOGGLE_MESSAGE_TYPE = 'toggle-scroll-progress'
 
   /**
    * スクロール量を0から100の整数に丸める。
@@ -13,13 +13,13 @@
    * @returns {number | null}
    */
   function calculateProgress(scrollTop, scrollHeight, viewportHeight) {
-    var scrollableHeight = scrollHeight - viewportHeight
+    const scrollableHeight = scrollHeight - viewportHeight
 
     if (scrollableHeight <= 0) {
       return null
     }
 
-    var progress = (scrollTop / scrollableHeight) * 100
+    const progress = (scrollTop / scrollableHeight) * 100
 
     return Math.round(Math.max(Math.min(progress, 100), 0))
   }
@@ -32,7 +32,7 @@
    * @returns {number | null}
    */
   function calculateDocumentProgress(documentObject, windowObject) {
-    var scrollingElement = documentObject.scrollingElement || documentObject.documentElement
+    const scrollingElement = documentObject.scrollingElement || documentObject.documentElement
 
     return calculateProgress(
       scrollingElement.scrollTop,
@@ -144,14 +144,14 @@
    * @returns {Function}
    */
   function throttle(callback, wait) {
-    var timeout = null
-    var previous = 0
+    let timeout = null
+    let previous = 0
 
     return function () {
-      var now = Date.now()
-      var remaining = wait - (now - previous)
-      var context = this
-      var args = arguments
+      const now = Date.now()
+      const remaining = wait - (now - previous)
+      const context = this
+      const args = arguments
 
       if (remaining <= 0) {
         clearTimeout(timeout)

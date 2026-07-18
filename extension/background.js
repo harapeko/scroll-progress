@@ -3,8 +3,8 @@ importScripts('core.js', 'badge.js')
 ;(function () {
   'use strict'
 
-  var core = globalThis.ScrollProgressCore
-  var badge = globalThis.ScrollProgressBadge
+  const core = globalThis.ScrollProgressCore
+  const badge = globalThis.ScrollProgressBadge
 
   /**
    * content scriptから返った状態をbadgeへ反映する。
@@ -13,7 +13,7 @@ importScripts('core.js', 'badge.js')
    * @param {unknown} response
    */
   function applyToggleResponse(tabId, response) {
-    var enabled = core.readEnabledResponse(response)
+    const enabled = core.readEnabledResponse(response)
 
     // 受信先がない場合やresponseが不正な場合は、古い表示を残さない。
     if (chrome.runtime.lastError || enabled === null) {
