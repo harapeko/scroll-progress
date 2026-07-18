@@ -50,10 +50,15 @@ function runContentScript(options = {}) {
   const indicatorElement = {}
   const progress = options.progress === undefined ? 25 : options.progress
   class ElementStub {
-    /** @param {number | null} elementProgress */
-    constructor(elementProgress) {
+    /**
+     * @param {number | null} elementProgress
+     * @param {boolean} verticallyScrollable
+     */
+    constructor(elementProgress, verticallyScrollable) {
+      this.clientHeight = 100
       this.isConnected = true
       this.progress = elementProgress
+      this.scrollHeight = verticallyScrollable ? 200 : 100
     }
   }
   const documentObject = {
@@ -155,7 +160,10 @@ function runContentScript(options = {}) {
     },
     /** @param {number} elementProgress */
     createScrollElement(elementProgress) {
-      return new ElementStub(elementProgress)
+      return new ElementStub(elementProgress, true)
+    },
+    createHorizontalScrollElement() {
+      return new ElementStub(null, false)
     },
   }
 }
@@ -201,6 +209,25 @@ test('content scriptはDocumentのscrollへ戻る', () => {
   scroll({ target: {} })
 
   assert.deepEqual(calls.updated, [45, 80, 45])
+})
+
+test('content scriptは横方向だけのscrollでactive elementを変えない', () => {
+  const { calls, createHorizontalScrollElement, createScrollElement, listeners } =
+    runContentScript({ progress: 40 })
+  const scroll = /** @type {((event: { target: unknown }) => void) | undefined} */ (
+    listeners.document.get('scroll')
+  )
+  const resize = listeners.window.get('resize')
+  assert.ok(scroll)
+  assert.ok(resize)
+  const verticalPane = createScrollElement(70)
+
+  scroll({ target: verticalPane })
+  scroll({ target: createHorizontalScrollElement() })
+  resize()
+
+  assert.deepEqual(calls.elementSources, [verticalPane, verticalPane])
+  assert.deepEqual(calls.updated, [40, 70, 70])
 })
 
 test('content scriptはresize後にactive elementを再計算する', () => {

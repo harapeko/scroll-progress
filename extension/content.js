@@ -84,10 +84,19 @@
   /**
    * 最後に操作されたscroll areaを進捗sourceにする。
    *
-   * @param {Event} event
+  * @param {Event} event
    */
   function handleScroll(event) {
-    activeScrollElement = event.target instanceof Element ? event.target : null
+    if (event.target instanceof Element) {
+      if (event.target.scrollHeight <= event.target.clientHeight) {
+        return
+      }
+
+      activeScrollElement = event.target
+    } else {
+      activeScrollElement = null
+    }
+
     throttledUpdateProgress()
   }
 
