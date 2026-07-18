@@ -103,18 +103,17 @@ Scroll Progressの現在コードを、buildなしの構成を保ったまま、
 | 2 | badge表示の判断をテスト可能にする | 完了 | Mission 1 | `OFF` 表示条件をpure function化する |
 | 3 | indicator表示文字の生成をテスト可能にする | 完了 | なし | `progress + ' %'` を固定する |
 | 4 | content scriptの起動処理を整理する | 完了 | Mission 1, 3 | イベント登録と状態更新を読みやすくする |
-| 5 | service workerのmessage失敗時挙動を明示する | 未着手 | Mission 1, 2 | content script不在タブの扱い |
+| 5 | service workerのmessage失敗時挙動を明示する | 完了 | Mission 1, 2 | content script不在タブの扱い |
 
 Mission一覧は初期仮説として扱う。実装結果に応じて追加、分割、統合、並べ替えを行ってよい。ただし、完了済みMissionの意味を後から別の成果へ変更しないこと。
 
 ## 現在のMission
 
-Mission 4は完了。次のMissionはMission 5を候補にする。
+Mission 5は完了。Grand Order 2の完了条件を満たした。
 
 ## 未確定事項
 
-- indicatorやbadgeのDOM/Chrome API依存部分を、どこまでNode標準テストで扱うか。
-- content script不在タブで拡張アイコンを押したときのユーザー向け表現。
+- なし。
 
 ## 判断履歴
 
@@ -125,3 +124,5 @@ Mission 4は完了。次のMissionはMission 5を候補にする。
 - Mission 2では、badge表示文字の判断を `core.getBadgeText()` に寄せ、Node標準テストで固定した。
 - Mission 3では、indicator表示文字の生成を `core.getIndicatorText()` に寄せ、初期表示と更新処理で共有した。
 - Mission 4では、content scriptの起点を `start()` にまとめ、listener登録とruntime message処理を分けた。
+- Mission 5では、正常responseだけbadgeへ反映し、送信失敗または不正responseでは古いbadgeを消す契約を固定した。
+- content script不在時に新しいエラー表示は追加しない。現在状態を確認できないため、badgeを消すだけとする。

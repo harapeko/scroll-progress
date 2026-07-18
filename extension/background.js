@@ -6,26 +6,51 @@ importScripts('core.js', 'badge.js')
   var core = globalThis.ScrollProgressCore
   var badge = globalThis.ScrollProgressBadge
 
-  chrome.action.onClicked.addListener(function (tab) {
+  /**
+   * content scriptから返った状態をbadgeへ反映する。
+   *
+   * @param {number} tabId
+   * @param {unknown} response
+   */
+  function applyToggleResponse(tabId, response) {
+    var enabled = core.readEnabledResponse(response)
+
+    // 受信先がない場合やresponseが不正な場合は、古い表示を残さない。
+    if (chrome.runtime.lastError || enabled === null) {
+      badge.clear(tabId)
+      return
+    }
+
+    badge.update(tabId, enabled)
+  }
+
+  /**
+   * actionを押したタブへtoggle要求を送る。
+   *
+   * @param {{ id?: number }} tab
+   */
+  function handleActionClick(tab) {
     if (typeof tab.id !== 'number') {
       return
     }
 
     chrome.tabs.sendMessage(tab.id, core.createToggleMessage(), function (response) {
-      var enabled = core.readEnabledResponse(response)
-
-      if (chrome.runtime.lastError || enabled === null) {
-        badge.clear(tab.id)
-        return
-      }
-
-      badge.update(tab.id, enabled)
+      applyToggleResponse(tab.id, response)
     })
-  })
+  }
 
-  chrome.tabs.onUpdated.addListener(function (tabId, changeInfo) {
+  /**
+   * ページ遷移が始まったタブのbadgeを戻す。
+   *
+   * @param {number} tabId
+   * @param {{ status?: string }} changeInfo
+   */
+  function handleTabUpdated(tabId, changeInfo) {
     if (changeInfo.status === 'loading') {
       badge.clear(tabId)
     }
-  })
+  }
+
+  chrome.action.onClicked.addListener(handleActionClick)
+  chrome.tabs.onUpdated.addListener(handleTabUpdated)
 })()
