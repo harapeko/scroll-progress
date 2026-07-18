@@ -8,7 +8,7 @@
    *
    * @param {Promise<unknown>} promise
    */
-  function settle(promise) {
+  function ignoreBadgeUpdateFailure(promise) {
     void promise.catch(function () {
       // badgeは補助表示なので、タブ終了後の失敗は再試行しない。
     })
@@ -19,20 +19,24 @@
    * @param {boolean} enabled
    */
   function update(tabId, enabled) {
-    settle(chrome.action.setBadgeBackgroundColor({ color: '#666666', tabId: tabId }))
-    settle(chrome.action.setBadgeText({ text: core.getBadgeText(enabled), tabId: tabId }))
+    ignoreBadgeUpdateFailure(
+      chrome.action.setBadgeBackgroundColor({ color: '#666666', tabId: tabId })
+    )
+    ignoreBadgeUpdateFailure(
+      chrome.action.setBadgeText({ text: core.getBadgeText(enabled), tabId: tabId })
+    )
   }
 
   /**
    * @param {number} tabId
    */
   function clear(tabId) {
-    settle(chrome.action.setBadgeText({ text: '', tabId: tabId }))
+    ignoreBadgeUpdateFailure(chrome.action.setBadgeText({ text: '', tabId: tabId }))
   }
 
   // noinspection JSUnusedGlobalSymbols -- manifest経由で別scriptから参照する。
   global.ScrollProgressBadge = {
-    clear: clear,
-    update: update,
+    clear,
+    update,
   }
 })(globalThis)

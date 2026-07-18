@@ -102,11 +102,11 @@ extension内の各関数を、責務、入力、戻り値、所有moduleが読�
 |---:|---|---|---|---|
 | 1 | coreの公開契約と判定を絞る | 完了 | なし | message/responseを含む |
 | 2 | indicatorへDOM責務を集める | 完了 | Mission 1 | 直接テストを追加 |
-| 3 | adapter関数を整理する | 未着手 | Mission 1, 2 | content/background/badge |
+| 3 | adapter関数を整理する | 完了 | Mission 1, 2 | content/background/badge |
 
 ## 現在のMission
 
-Mission 2は完了。次はMission 3を実行する。
+Mission 3は完了。Grand Order 5の完了条件を満たした。
 
 ## 未確定事項
 
@@ -120,3 +120,4 @@ Mission 2は完了。次はMission 3を実行する。
 - 1回しか発火しないeventへwait 0のthrottleは使わない。
 - Mission 1では、toggle responseをboolean契約へ絞り、production未使用の公開項目を外した。
 - Mission 2では、indicator固有のDOM設定を生成処理へ戻し、indicator APIを直接テストした。
+- Mission 3では、adapter関数の名前、引数型、error処理順を実際の呼び出しへ合わせた。

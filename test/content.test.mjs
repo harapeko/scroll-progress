@@ -126,7 +126,7 @@ test('content scriptは対応ページで表示とlistener登録を開始する'
   assert.equal(typeof listeners.runtime, 'function')
   assert.equal(typeof listeners.window.get('load'), 'function')
   assert.equal(typeof listeners.window.get('scroll'), 'function')
-  assert.deepEqual(calls.throttleWaits, [0, 100])
+  assert.deepEqual(calls.throttleWaits, [100])
   assert.equal(calls.shown, 1)
   assert.deepEqual(calls.updated, [40])
 })

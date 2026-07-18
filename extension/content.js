@@ -29,7 +29,7 @@
    *
    * @param {boolean} nextEnabled
    */
-  function applyEnabled(nextEnabled) {
+  function setEnabled(nextEnabled) {
     enabled = nextEnabled
 
     if (!enabled) {
@@ -46,7 +46,7 @@
    * @returns {boolean}
    */
   function toggleEnabled() {
-    applyEnabled(!enabled)
+    setEnabled(!enabled)
     return enabled
   }
 
@@ -54,8 +54,8 @@
    * backgroundから届いたtoggle要求へ応答する。
    *
    * @param {unknown} message
-   * @param {unknown} _sender
-   * @param {Function} sendResponse
+   * @param {chrome.runtime.MessageSender} _sender
+   * @param {(response: { enabled: boolean }) => void} sendResponse
    */
   function handleRuntimeMessage(message, _sender, sendResponse) {
     if (!core.isToggleMessage(message)) {
@@ -70,7 +70,7 @@
    */
   function registerListeners() {
     chrome.runtime.onMessage.addListener(handleRuntimeMessage)
-    window.addEventListener('load', core.throttle(updateProgress, 0))
+    window.addEventListener('load', updateProgress)
     window.addEventListener('scroll', core.throttle(updateProgress, 100))
   }
 

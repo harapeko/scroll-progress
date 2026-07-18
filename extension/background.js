@@ -12,11 +12,16 @@ importScripts('core.js', 'badge.js')
    * @param {number} tabId
    * @param {unknown} response
    */
-  function applyToggleResponse(tabId, response) {
+  function updateBadgeFromResponse(tabId, response) {
+    if (chrome.runtime.lastError) {
+      badge.clear(tabId)
+      return
+    }
+
     const enabled = core.readEnabledResponse(response)
 
-    // 受信先がない場合やresponseが不正な場合は、古い表示を残さない。
-    if (chrome.runtime.lastError || enabled === null) {
+    // responseが不正な場合は、古い表示を残さない。
+    if (enabled === null) {
       badge.clear(tabId)
       return
     }
@@ -27,7 +32,7 @@ importScripts('core.js', 'badge.js')
   /**
    * actionを押したタブへtoggle要求を送る。
    *
-   * @param {{ id?: number }} tab
+   * @param {chrome.tabs.Tab} tab
    */
   function handleActionClick(tab) {
     if (typeof tab.id !== 'number') {
@@ -38,7 +43,7 @@ importScripts('core.js', 'badge.js')
 
     // noinspection JSIgnoredPromiseFromCall -- callback版はPromiseを返さない。
     chrome.tabs.sendMessage(tabId, core.createToggleMessage(), function (response) {
-      applyToggleResponse(tabId, response)
+      updateBadgeFromResponse(tabId, response)
     })
   }
 
@@ -46,7 +51,7 @@ importScripts('core.js', 'badge.js')
    * ページ遷移が始まったタブのbadgeを戻す。
    *
    * @param {number} tabId
-   * @param {{ status?: string }} changeInfo
+   * @param {chrome.tabs.OnUpdatedInfo} changeInfo
    */
   function handleTabUpdated(tabId, changeInfo) {
     if (changeInfo.status === 'loading') {
