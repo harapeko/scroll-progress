@@ -23,18 +23,24 @@ function runContentScript(options = {}) {
    * @type {{
    *   hidden: number,
    *   elementSources: object[],
+   *   observedElements: object[],
    *   shown: number,
    *   throttleWaits: number[],
+   *   unobservedElements: object[],
    *   updated: number[]
    * }}
    */
   const calls = {
     elementSources: [],
     hidden: 0,
+    observedElements: [],
     shown: 0,
     throttleWaits: [],
+    unobservedElements: [],
     updated: [],
   }
+  /** @type {(() => void) | null} */
+  let resizeObserverCallback = null
   /**
    * @type {{
    *   document: Map<string, StoredEventListener>,
@@ -125,6 +131,22 @@ function runContentScript(options = {}) {
         calls.updated.push(value)
       },
     },
+    ResizeObserver: class {
+      /** @param {() => void} callback */
+      constructor(callback) {
+        resizeObserverCallback = callback
+      }
+
+      /** @param {object} element */
+      observe(element) {
+        calls.observedElements.push(element)
+      }
+
+      /** @param {object} element */
+      unobserve(element) {
+        calls.unobservedElements.push(element)
+      }
+    },
     chrome: {
       runtime: {
         onMessage: {
@@ -154,6 +176,10 @@ function runContentScript(options = {}) {
   return {
     calls,
     listeners,
+    notifyElementResize() {
+      assert.ok(resizeObserverCallback)
+      resizeObserverCallback()
+    },
     /** @param {boolean} fullscreen */
     setFullscreen(fullscreen) {
       documentObject.fullscreenElement = fullscreen ? {} : null
@@ -194,6 +220,8 @@ test('content scriptは最後にscrollされたelementの進捗を表示する',
   scroll({ target: rightPane })
 
   assert.deepEqual(calls.elementSources, [leftPane, rightPane])
+  assert.deepEqual(calls.observedElements, [leftPane, rightPane])
+  assert.deepEqual(calls.unobservedElements, [leftPane])
   assert.deepEqual(calls.updated, [20, 75])
   assert.equal(calls.shown, 2)
 })
@@ -205,10 +233,13 @@ test('content scriptはDocumentのscrollへ戻る', () => {
   )
   assert.ok(scroll)
 
-  scroll({ target: createScrollElement(80) })
+  const pane = createScrollElement(80)
+  scroll({ target: pane })
   scroll({ target: {} })
 
   assert.deepEqual(calls.updated, [45, 80, 45])
+  assert.deepEqual(calls.observedElements, [pane])
+  assert.deepEqual(calls.unobservedElements, [pane])
 })
 
 test('content scriptは横方向だけのscrollでactive elementを変えない', () => {
@@ -247,36 +278,55 @@ test('content scriptはresize後にactive elementを再計算する', () => {
   assert.deepEqual(calls.updated, [10, 20, 65])
 })
 
-test('content scriptは切断されたelementからDocumentへ戻る', () => {
-  const { calls, createScrollElement, listeners } = runContentScript({ progress: 35 })
+test('content scriptはactive elementのresize後に進捗を再計算する', () => {
+  const { calls, createScrollElement, listeners, notifyElementResize } = runContentScript({
+    progress: 10,
+  })
   const scroll = /** @type {((event: { target: unknown }) => void) | undefined} */ (
     listeners.document.get('scroll')
   )
-  const resize = listeners.window.get('resize')
   assert.ok(scroll)
-  assert.ok(resize)
+  const pane = createScrollElement(20)
+
+  scroll({ target: pane })
+  pane.progress = 65
+  notifyElementResize()
+
+  assert.deepEqual(calls.updated, [10, 20, 65])
+})
+
+test('content scriptは切断されたelementからDocumentへ戻る', () => {
+  const { calls, createScrollElement, listeners, notifyElementResize } = runContentScript({
+    progress: 35,
+  })
+  const scroll = /** @type {((event: { target: unknown }) => void) | undefined} */ (
+    listeners.document.get('scroll')
+  )
+  assert.ok(scroll)
   const pane = createScrollElement(80)
 
   scroll({ target: pane })
   pane.isConnected = false
-  resize()
+  notifyElementResize()
 
   assert.deepEqual(calls.updated, [35, 80, 35])
+  assert.deepEqual(calls.unobservedElements, [pane])
 })
 
 test('content scriptはactive elementがscroll不可になると隠れる', () => {
-  const { calls, createScrollElement, listeners } = runContentScript({ progress: 40 })
+  const { calls, createScrollElement, listeners, notifyElementResize } = runContentScript({
+    progress: 40,
+  })
   const scroll = /** @type {((event: { target: unknown }) => void) | undefined} */ (
     listeners.document.get('scroll')
   )
-  const resize = listeners.window.get('resize')
   assert.ok(scroll)
-  assert.ok(resize)
   const pane = createScrollElement(70)
 
   scroll({ target: pane })
   pane.progress = null
-  resize()
+  pane.scrollHeight = pane.clientHeight
+  notifyElementResize()
 
   assert.deepEqual(calls.updated, [40, 70])
   assert.equal(calls.hidden, 1)

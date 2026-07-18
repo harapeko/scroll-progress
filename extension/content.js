@@ -22,7 +22,7 @@
     }
 
     if (activeScrollElement && !activeScrollElement.isConnected) {
-      activeScrollElement = null
+      setActiveScrollElement(null)
     }
 
     const progress = activeScrollElement
@@ -80,6 +80,28 @@
   }
 
   const throttledUpdateProgress = core.throttle(updateProgress, 100)
+  const activeScrollElementObserver = new ResizeObserver(throttledUpdateProgress)
+
+  /**
+   * active elementを切り替え、監視対象を1件に保つ。
+   *
+   * @param {Element | null} nextElement
+   */
+  function setActiveScrollElement(nextElement) {
+    if (activeScrollElement === nextElement) {
+      return
+    }
+
+    if (activeScrollElement) {
+      activeScrollElementObserver.unobserve(activeScrollElement)
+    }
+
+    activeScrollElement = nextElement
+
+    if (activeScrollElement) {
+      activeScrollElementObserver.observe(activeScrollElement)
+    }
+  }
 
   /**
    * 最後に操作されたscroll areaを進捗sourceにする。
@@ -92,9 +114,9 @@
         return
       }
 
-      activeScrollElement = event.target
+      setActiveScrollElement(event.target)
     } else {
-      activeScrollElement = null
+      setActiveScrollElement(null)
     }
 
     throttledUpdateProgress()

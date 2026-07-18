@@ -86,14 +86,14 @@
 | No. | Mission | 状態 | 依存 | 備考 |
 |---:|---|---|---|---|
 | 1 | 縦scroll sourceだけを選択 | 完了 | なし | 横scrollは現在sourceを維持 |
-| 2 | active elementのresizeを監視 | 進行中 | Mission 1 | 監視対象は1件 |
-| 3 | READMEの対応契約を訂正 | 未着手 | Mission 1, 2 | iframeとshadow rootを含む |
+| 2 | active elementのresizeを監視 | 完了 | Mission 1 | 監視対象は1件 |
+| 3 | READMEの対応契約を訂正 | 進行中 | Mission 1, 2 | iframeとshadow rootを含む |
 
 Mission一覧は初期仮説として扱う。実装結果に応じて追加、分割、統合、並べ替えを行ってよい。ただし、完了済みMissionの意味を後から別の成果へ変更しないこと。
 
 ## 現在のMission
 
-Mission 2を実施中。active elementだけをResizeObserverで監視する。
+Mission 3を実施中。READMEの対応表と制約を現在実装へ合わせる。
 
 ## 未確定事項
 
@@ -105,3 +105,4 @@ Mission 2を実施中。active elementだけをResizeObserverで監視する。
 - element resizeはwindow resizeでは検知できないため、active elementだけResizeObserverで監視する。
 - iframe対応はframe間の表示とtoggle契約が別成果になるため対象外とする。
 - Mission 1では、縦scroll rangeがないElementのscroll eventで現在sourceを変えないようにした。
+- Mission 2では、active element 1件だけをResizeObserverで監視し、source変更時に監視を切り替えるようにした。
