@@ -74,12 +74,13 @@ Scroll Progressを、手作業zipに依存せず検証・パッケージでき�
 | 4 | ページ全体コピー時に進捗表示を混ぜない | 完了 | Mission 2 | 表示文字は変えない |
 | 5 | 拡張アイコンで表示ON/OFFを切り替える | 完了 | Mission 2 | 追加permissionなし |
 | 6 | READMEの公開前説明を現在実装に合わせる | 完了 | Mission 5 | Chrome Web Storeリンクも更新 |
+| 7 | Privacy Policyを公開前に用意する | 完了 | Mission 5 | データ収集なしを明記 |
 
 Mission一覧は初期仮説として扱う。実装結果に応じて追加、分割、統合、並べ替えを行ってよい。ただし、完了済みMissionの意味を後から別の成果へ変更しないこと。
 
 ## 現在のMission
 
-Mission 6は完了。次のMissionは未定。
+Mission 7は完了。次のMissionは未定。
 
 ## 未確定事項
 
@@ -94,3 +95,4 @@ Mission 6は完了。次のMissionは未定。
 - Mission 4では、進捗表示の `div` に選択除外と操作透過の指定を追加した。
 - Mission 5では、永続保存なしのタブ単位ON/OFFにした。`storage`, `tabs`, `activeTab`, host permissionは追加しない。
 - Mission 6では、READMEの表示説明とChrome Web Storeリンクを現在状態に合わせた。
+- Mission 7では、Chrome Web Store掲載に使えるPrivacy Policyを追加した。
