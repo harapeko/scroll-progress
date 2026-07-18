@@ -132,6 +132,7 @@ test('normalizeEnabledはfalseだけを無効扱いにする', () => {
   assert.equal(core.normalizeEnabled(false), false)
   assert.equal(core.normalizeEnabled(true), true)
   assert.equal(core.normalizeEnabled(undefined), true)
+  assert.equal(core.normalizeEnabled(null), true)
   assert.equal(core.normalizeEnabled('off'), true)
 })
 
@@ -145,20 +146,29 @@ test('toggle messageの作成と判定を共有する', () => {
   assert.equal(message.type, 'toggle-scroll-progress')
   assert.equal(core.isToggleMessage(message), true)
   assert.equal(core.isToggleMessage({ type: 'other' }), false)
+  assert.equal(core.isToggleMessage({}), false)
   assert.equal(core.isToggleMessage(null), false)
+  assert.equal(core.isToggleMessage(undefined), false)
+  assert.equal(core.isToggleMessage('toggle-scroll-progress'), false)
 })
 
 test('toggle responseはenabledを正規化して返す', () => {
   assert.equal(core.createToggleResponse(false).enabled, false)
+  assert.equal(core.createToggleResponse(true).enabled, true)
   assert.equal(core.createToggleResponse(undefined).enabled, true)
+  assert.equal(core.createToggleResponse(null).enabled, true)
 })
 
 test('readEnabledResponseはresponseから有効状態を読む', () => {
   assert.equal(core.readEnabledResponse({ enabled: false }), false)
   assert.equal(core.readEnabledResponse({ enabled: true }), true)
+  assert.equal(core.readEnabledResponse({ enabled: null }), true)
   assert.equal(core.readEnabledResponse({ enabled: 'unexpected' }), true)
+  assert.equal(core.readEnabledResponse({ enabled: undefined }), null)
   assert.equal(core.readEnabledResponse({}), null)
   assert.equal(core.readEnabledResponse(null), null)
+  assert.equal(core.readEnabledResponse(undefined), null)
+  assert.equal(core.readEnabledResponse(false), null)
 })
 
 test('getBadgeTextはOFF時だけ表示文字を返す', () => {

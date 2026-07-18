@@ -84,11 +84,11 @@
 |---:|---|---|---|---|
 | 1 | スクロール主体の寸法で進捗を計算する | 完了 | なし | JSDocと型宣言を含む |
 | 2 | throttleの時間境界を固定する | 完了 | Mission 1 | 偽時計によるテスト |
-| 3 | messageとON/OFFの境界値を確認する | 未着手 | なし | 既存仕様のテスト補完 |
+| 3 | messageとON/OFFの境界値を確認する | 完了 | なし | 既存仕様のテスト補完 |
 
 ## 現在のMission
 
-Mission 2は完了。次はMission 3を実行する。
+Mission 3は完了。Grand Order 4の完了条件を満たした。
 
 ## 未確定事項
 
@@ -103,3 +103,4 @@ Mission 2は完了。次はMission 3を実行する。
 - message検査と `normalizeEnabled` は現在のテストとfalse-only仕様が一致しているため変更しない。
 - Mission 1では、選択したscrolling elementの位置と高さを組にして進捗を計算するようにした。
 - Mission 2では、throttleの現在動作を偽時計で再現し、内部状態の名前とnull判定を明確にした。
+- Mission 3では、message、response、false-onlyのON/OFF仕様に不足していた境界値を追加した。
