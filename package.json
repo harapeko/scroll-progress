@@ -6,11 +6,11 @@
     "node": ">=20"
   },
   "scripts": {
-    "syntax": "find scroll_progress -name \"*.js\" -print0 | xargs -0 -n 1 sh -c 'node --check < \"$0\"'",
+    "syntax": "find extension -name \"*.js\" -print0 | xargs -0 -n 1 sh -c 'node --check < \"$0\"'",
     "test": "node --test",
     "build:zip": "sh scripts/build-zip.sh",
     "package:zip": "npm run build:zip",
-    "clean": "rm -f scroll_progress.zip",
+    "clean": "rm -f extension.zip",
     "verify": "npm run syntax && npm run test && npm run build:zip"
   }
 }

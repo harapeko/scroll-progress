@@ -3,7 +3,7 @@ import fs from 'node:fs'
 import test from 'node:test'
 import vm from 'node:vm'
 
-const source = fs.readFileSync(new URL('../scroll_progress/core.js', import.meta.url), 'utf8')
+const source = fs.readFileSync(new URL('../extension/core.js', import.meta.url), 'utf8')
 const context = { globalThis: {} }
 
 vm.createContext(context)

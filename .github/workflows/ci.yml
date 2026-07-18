@@ -34,5 +34,5 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: extension
-          path: scroll_progress.zip
+          path: extension.zip
           if-no-files-found: error
