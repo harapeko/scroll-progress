@@ -13,6 +13,82 @@ vm.runInContext(source, context)
 const core = context.globalThis.ScrollProgressCore
 assert.ok(core)
 
+function createThrottleFixture() {
+  let now = 1000
+  let nextTimerId = 1
+  /** @type {Map<number, { callback: () => void, runAt: number }>} */
+  const timers = new Map()
+
+  const throttleContext = {
+    Date: {
+      now() {
+        return now
+      },
+    },
+    /**
+     * @param {() => void} callback
+     * @param {number} delay
+     */
+    setTimeout(callback, delay) {
+      const timerId = nextTimerId
+      nextTimerId += 1
+      timers.set(timerId, { callback, runAt: now + delay })
+      return timerId
+    },
+    /** @param {number} timerId */
+    clearTimeout(timerId) {
+      timers.delete(timerId)
+    },
+    /** @type {{ ScrollProgressCore?: ScrollProgressCoreApi }} */
+    globalThis: {},
+  }
+
+  vm.createContext(throttleContext)
+  vm.runInContext(source, throttleContext)
+
+  const throttleCore = throttleContext.globalThis.ScrollProgressCore
+  assert.ok(throttleCore)
+
+  /**
+   * 指定時刻まで、期限が来たtimerを順番に実行する。
+   *
+   * @param {number} elapsed
+   */
+  function advance(elapsed) {
+    const targetTime = now + elapsed
+
+    while (true) {
+      const nextTimer = Array.from(timers.entries())
+        .filter(([, timer]) => timer.runAt <= targetTime)
+        .sort((left, right) => left[1].runAt - right[1].runAt)[0]
+
+      if (!nextTimer) {
+        break
+      }
+
+      const [timerId, timer] = nextTimer
+      now = timer.runAt
+      timers.delete(timerId)
+      timer.callback()
+    }
+
+    now = targetTime
+  }
+
+  /** @param {number} elapsed */
+  function elapseWithoutTimers(elapsed) {
+    now += elapsed
+  }
+
+  return {
+    advance,
+    elapseWithoutTimers,
+    now: () => now,
+    pendingTimers: () => timers.size,
+    core: throttleCore,
+  }
+}
+
 test('calculateProgressはスクロール率を整数にする', () => {
   assert.equal(core.calculateProgress(50, 200, 100), 50)
 })
@@ -114,4 +190,50 @@ test('keepIndicatorOutOfPageSelectionは拡張表示を本文コピーから外�
   assert.equal(element.style.pointerEvents, 'none')
   assert.equal(element.style.userSelect, 'none')
   assert.equal(element.style.webkitUserSelect, 'none')
+})
+
+test('throttleは先頭を即時実行し連続呼び出しを末尾1回にまとめる', () => {
+  const fixture = createThrottleFixture()
+  /** @type {number[]} */
+  const invokedAt = []
+  const throttled = fixture.core.throttle(() => invokedAt.push(fixture.now()), 100)
+
+  throttled()
+  fixture.advance(20)
+  throttled()
+  fixture.advance(30)
+  throttled()
+
+  assert.deepEqual(invokedAt, [1000])
+  assert.equal(fixture.pendingTimers(), 1)
+
+  fixture.advance(50)
+
+  assert.deepEqual(invokedAt, [1000, 1100])
+  assert.equal(fixture.pendingTimers(), 0)
+
+  fixture.advance(100)
+  throttled()
+
+  assert.deepEqual(invokedAt, [1000, 1100, 1200])
+})
+
+test('throttleは期限を過ぎたtimerを解除して二重実行しない', () => {
+  const fixture = createThrottleFixture()
+  /** @type {number[]} */
+  const invokedAt = []
+  const throttled = fixture.core.throttle(() => invokedAt.push(fixture.now()), 100)
+
+  throttled()
+  fixture.advance(20)
+  throttled()
+  fixture.elapseWithoutTimers(100)
+  throttled()
+
+  assert.deepEqual(invokedAt, [1000, 1120])
+  assert.equal(fixture.pendingTimers(), 0)
+
+  fixture.advance(100)
+
+  assert.deepEqual(invokedAt, [1000, 1120])
 })

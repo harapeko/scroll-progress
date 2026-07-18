@@ -155,29 +155,29 @@
    */
   function throttle(callback, wait) {
     /** @type {ReturnType<typeof setTimeout> | null} */
-    let timeout = null
-    let previous = 0
+    let trailingTimeout = null
+    let lastInvocationTime = 0
 
     return function () {
       const now = Date.now()
-      const remaining = wait - (now - previous)
+      const remainingWait = wait - (now - lastInvocationTime)
 
-      if (remaining <= 0) {
-        if (timeout !== null) {
-          clearTimeout(timeout)
+      if (remainingWait <= 0) {
+        if (trailingTimeout !== null) {
+          clearTimeout(trailingTimeout)
         }
-        timeout = null
-        previous = now
+        trailingTimeout = null
+        lastInvocationTime = now
         callback()
         return
       }
 
-      if (!timeout) {
-        timeout = setTimeout(function () {
-          previous = Date.now()
-          timeout = null
+      if (trailingTimeout === null) {
+        trailingTimeout = setTimeout(function () {
+          lastInvocationTime = Date.now()
+          trailingTimeout = null
           callback()
-        }, remaining)
+        }, remainingWait)
       }
     }
   }
