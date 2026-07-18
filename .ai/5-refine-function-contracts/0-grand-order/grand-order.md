@@ -108,10 +108,11 @@ extension内の各関数を、責務、入力、戻り値、所有moduleが読�
 | 6 | action tab IDのbindingを簡潔にする | 完了 | Mission 3 | callbackまで数値IDを固定 |
 | 7 | 非推奨CSS aliasとVM警告を整理する | 完了 | Mission 2, 4 | 標準 `userSelect` を使用 |
 | 8 | enabled responseの読み取りを簡潔にする | 完了 | Mission 1 | propertyを1回だけ読む |
+| 9 | enabledをown propertyに限定する | 完了 | Mission 8 | 外部境界の受理範囲を限定 |
 
 ## 現在のMission
 
-Mission 8は完了。Grand Order 5の完了条件を満たした。
+Mission 9は完了。Grand Order 5の完了条件を満たした。
 
 ## 未確定事項
 
@@ -136,3 +137,5 @@ Mission 8は完了。Grand Order 5の完了条件を満たした。
 - Mission 7では、非推奨aliasを削除し、VM stubだけに動的参照のinspection指定を付けた。
 - enabled responseはobject判定後にpropertyを1回だけ読み、boolean以外を `null` とする。
 - Mission 8では、responseの受理範囲を維持したままenabledの読み取りを簡潔にした。
+- 外部境界ではprototype上のenabledを受理せず、response自身のpropertyだけを読む。
+- Mission 9では、`Object.hasOwn` による所有確認とprototype値の拒否をテストした。

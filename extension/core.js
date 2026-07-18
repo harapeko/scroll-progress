@@ -92,7 +92,11 @@
    * @returns {boolean | null}
    */
   function readEnabledResponse(response) {
-    if (typeof response !== 'object' || response === null) {
+    if (
+      typeof response !== 'object' ||
+      response === null ||
+      !Object.hasOwn(response, 'enabled')
+    ) {
       return null
     }
 

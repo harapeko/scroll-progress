@@ -148,6 +148,8 @@ test('toggle responseはbooleanのenabledをそのまま返す', () => {
 })
 
 test('readEnabledResponseはresponseから有効状態を読む', () => {
+  const inheritedResponse = Object.create({ enabled: true })
+
   assert.equal(core.readEnabledResponse({ enabled: false }), false)
   assert.equal(core.readEnabledResponse({ enabled: true }), true)
   assert.equal(core.readEnabledResponse({ enabled: null }), null)
@@ -157,6 +159,7 @@ test('readEnabledResponseはresponseから有効状態を読む', () => {
   assert.equal(core.readEnabledResponse(null), null)
   assert.equal(core.readEnabledResponse(undefined), null)
   assert.equal(core.readEnabledResponse(false), null)
+  assert.equal(core.readEnabledResponse(inheritedResponse), null)
 })
 
 test('getBadgeTextはOFF時だけ表示文字を返す', () => {
