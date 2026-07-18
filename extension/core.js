@@ -92,16 +92,12 @@
    * @returns {boolean | null}
    */
   function readEnabledResponse(response) {
-    if (
-      typeof response !== 'object' ||
-      response === null ||
-        !('enabled' in response) ||
-        typeof response.enabled !== 'boolean'
-    ) {
+    if (typeof response !== 'object' || response === null) {
       return null
     }
 
-    return response.enabled
+    const enabled = Reflect.get(response, 'enabled')
+    return typeof enabled === 'boolean' ? enabled : null
   }
 
   /**
