@@ -126,37 +126,39 @@
 
   /**
    * 指定時間内の呼び出し回数を抑える。
+   * 最初は即時実行し、待機中の呼び出しは最後に1回実行する。
    *
    * @param {() => void} callback
    * @param {number} wait
    * @returns {() => void}
    */
   function throttle(callback, wait) {
-    /** @type {ReturnType<typeof setTimeout> | null} */
-    let trailingTimeout = null
-    let lastInvocationTime = 0
+    /** @type {ReturnType<typeof setTimeout> | undefined} */
+    let timeoutId
+    let lastInvokedAt = Number.NEGATIVE_INFINITY
+
+    /** @param {number} invokedAt */
+    function invoke(invokedAt) {
+      timeoutId = undefined
+      lastInvokedAt = invokedAt
+      callback()
+    }
 
     return function () {
       const now = Date.now()
-      const remainingWait = wait - (now - lastInvocationTime)
+      const remainingWait = wait - (now - lastInvokedAt)
 
-      if (remainingWait <= 0) {
-        if (trailingTimeout !== null) {
-          clearTimeout(trailingTimeout)
-        }
-        trailingTimeout = null
-        lastInvocationTime = now
-        callback()
+      if (remainingWait > 0) {
+        timeoutId ??= setTimeout(function () {
+          invoke(Date.now())
+        }, remainingWait)
         return
       }
 
-      if (trailingTimeout === null) {
-        trailingTimeout = setTimeout(function () {
-          lastInvocationTime = Date.now()
-          trailingTimeout = null
-          callback()
-        }, remainingWait)
+      if (timeoutId !== undefined) {
+        clearTimeout(timeoutId)
       }
+      invoke(now)
     }
   }
 

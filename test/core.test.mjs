@@ -13,8 +13,9 @@ vm.runInContext(source, context)
 const core = context.globalThis.ScrollProgressCore
 assert.ok(core)
 
-function createThrottleFixture() {
-  let now = 1000
+/** @param {number} [initialTime] */
+function createThrottleFixture(initialTime = 1000) {
+  let now = initialTime
   let nextTimerId = 1
   /** @type {Map<number, { callback: () => void, runAt: number }>} */
   const timers = new Map()
@@ -192,6 +193,18 @@ test('throttleは先頭を即時実行し連続呼び出しを末尾1回にま�
   throttled()
 
   assert.deepEqual(invokedAt, [1000, 1100, 1200])
+})
+
+test('throttleは時刻0でも最初の呼び出しを即時実行する', () => {
+  const fixture = createThrottleFixture(0)
+  /** @type {number[]} */
+  const invokedAt = []
+  const throttled = fixture.core.throttle(() => invokedAt.push(fixture.now()), 100)
+
+  throttled()
+
+  assert.deepEqual(invokedAt, [0])
+  assert.equal(fixture.pendingTimers(), 0)
 })
 
 test('throttleは期限を過ぎたtimerを解除して二重実行しない', () => {
