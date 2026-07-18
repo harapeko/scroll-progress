@@ -14,6 +14,11 @@
       return
     }
 
+    if (document.fullscreenElement) {
+      indicator.hide(indicatorElement)
+      return
+    }
+
     const progress = core.calculateDocumentProgress(document, window)
 
     if (progress === null) {
@@ -70,6 +75,7 @@
    */
   function registerListeners() {
     chrome.runtime.onMessage.addListener(handleRuntimeMessage)
+    document.addEventListener('fullscreenchange', updateProgress)
     window.addEventListener('load', updateProgress)
     window.addEventListener('scroll', core.throttle(updateProgress, 100))
   }
