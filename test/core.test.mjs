@@ -29,9 +29,8 @@ test('calculateProgressはスクロールできないページでnullを返す',
 
 test('calculateDocumentProgressはdocument/windowからスクロール率を計算する', () => {
   const documentObject = {
-    scrollingElement: { scrollTop: 75 },
-    documentElement: { scrollTop: 0 },
-    body: { scrollHeight: 400 },
+    scrollingElement: { scrollHeight: 400, scrollTop: 75 },
+    documentElement: { scrollHeight: 100, scrollTop: 0 },
   }
   const windowObject = { innerHeight: 100 }
 
@@ -41,8 +40,7 @@ test('calculateDocumentProgressはdocument/windowからスクロール率を計�
 test('calculateDocumentProgressはscrollingElementがない場合にdocumentElementを使う', () => {
   const documentObject = {
     scrollingElement: null,
-    documentElement: { scrollTop: 60 },
-    body: { scrollHeight: 300 },
+    documentElement: { scrollHeight: 300, scrollTop: 60 },
   }
   const windowObject = { innerHeight: 100 }
 

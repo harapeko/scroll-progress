@@ -1,10 +1,14 @@
 export {}
 
 declare global {
+  interface ScrollProgressElement {
+    scrollHeight: number
+    scrollTop: number
+  }
+
   interface ScrollProgressDocument {
-    body: { scrollHeight: number }
-    documentElement: { scrollTop: number }
-    scrollingElement?: { scrollTop: number } | null
+    documentElement: ScrollProgressElement
+    scrollingElement?: ScrollProgressElement | null
   }
 
   interface IndicatorSelectionElement {

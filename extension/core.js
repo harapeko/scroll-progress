@@ -27,16 +27,16 @@
   /**
    * document/windowから現在のスクロール率を計算する。
    *
-   * @param {{ scrollingElement?: { scrollTop: number } | null, documentElement: { scrollTop: number }, body: { scrollHeight: number } }} documentObject
+   * @param {ScrollProgressDocument} documentObject
    * @param {{ innerHeight: number }} windowObject
    * @returns {number | null}
    */
   function calculateDocumentProgress(documentObject, windowObject) {
-    const scrollingElement = documentObject.scrollingElement || documentObject.documentElement
+    const scrollingElement = documentObject.scrollingElement ?? documentObject.documentElement
 
     return calculateProgress(
       scrollingElement.scrollTop,
-      documentObject.body.scrollHeight,
+      scrollingElement.scrollHeight,
       windowObject.innerHeight
     )
   }
