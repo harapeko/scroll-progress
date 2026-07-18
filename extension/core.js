@@ -62,6 +62,49 @@
   }
 
   /**
+   * content scriptへ送るtoggle messageを作る。
+   *
+   * @returns {{ type: string }}
+   */
+  function createToggleMessage() {
+    return { type: TOGGLE_MESSAGE_TYPE }
+  }
+
+  /**
+   * 受け取ったmessageがtoggle用かを判定する。
+   *
+   * @param {unknown} message
+   * @returns {boolean}
+   */
+  function isToggleMessage(message) {
+    return Boolean(message && message.type === TOGGLE_MESSAGE_TYPE)
+  }
+
+  /**
+   * toggle後の状態をresponseとして返す。
+   *
+   * @param {unknown} enabled
+   * @returns {{ enabled: boolean }}
+   */
+  function createToggleResponse(enabled) {
+    return { enabled: normalizeEnabled(enabled) }
+  }
+
+  /**
+   * background側でresponseから有効状態を読む。
+   *
+   * @param {unknown} response
+   * @returns {boolean | null}
+   */
+  function readEnabledResponse(response) {
+    if (!response || typeof response.enabled === 'undefined') {
+      return null
+    }
+
+    return normalizeEnabled(response.enabled)
+  }
+
+  /**
    * ページ本文の選択やコピーに、拡張の表示文字を混ぜない。
    *
    * @param {{ setAttribute: Function, style: Object }} element
@@ -112,8 +155,12 @@
     TOGGLE_MESSAGE_TYPE: TOGGLE_MESSAGE_TYPE,
     calculateDocumentProgress: calculateDocumentProgress,
     calculateProgress: calculateProgress,
+    createToggleMessage: createToggleMessage,
+    createToggleResponse: createToggleResponse,
     keepIndicatorOutOfPageSelection: keepIndicatorOutOfPageSelection,
+    isToggleMessage: isToggleMessage,
     normalizeEnabled: normalizeEnabled,
+    readEnabledResponse: readEnabledResponse,
     shouldAttachIndicator: shouldAttachIndicator,
     throttle: throttle,
   }

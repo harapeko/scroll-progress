@@ -63,6 +63,28 @@ test('TOGGLE_MESSAGE_TYPEはcontent scriptとbackgroundで共有する', () => {
   assert.equal(core.TOGGLE_MESSAGE_TYPE, 'toggle-scroll-progress')
 })
 
+test('toggle messageの作成と判定を共有する', () => {
+  const message = core.createToggleMessage()
+
+  assert.equal(message.type, 'toggle-scroll-progress')
+  assert.equal(core.isToggleMessage(message), true)
+  assert.equal(core.isToggleMessage({ type: 'other' }), false)
+  assert.equal(core.isToggleMessage(null), false)
+})
+
+test('toggle responseはenabledを正規化して返す', () => {
+  assert.equal(core.createToggleResponse(false).enabled, false)
+  assert.equal(core.createToggleResponse(undefined).enabled, true)
+})
+
+test('readEnabledResponseはresponseから有効状態を読む', () => {
+  assert.equal(core.readEnabledResponse({ enabled: false }), false)
+  assert.equal(core.readEnabledResponse({ enabled: true }), true)
+  assert.equal(core.readEnabledResponse({ enabled: 'unexpected' }), true)
+  assert.equal(core.readEnabledResponse({}), null)
+  assert.equal(core.readEnabledResponse(null), null)
+})
+
 test('keepIndicatorOutOfPageSelectionは拡張表示を本文コピーから外しやすくする', () => {
   const attributes = new Map()
   const element = {

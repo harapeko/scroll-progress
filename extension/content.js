@@ -39,11 +39,11 @@
 
   function listenForToggle() {
     chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-      if (!message || message.type !== core.TOGGLE_MESSAGE_TYPE) {
+      if (!core.isToggleMessage(message)) {
         return undefined
       }
 
-      sendResponse({ enabled: toggleEnabled() })
+      sendResponse(core.createToggleResponse(toggleEnabled()))
       return undefined
     })
   }

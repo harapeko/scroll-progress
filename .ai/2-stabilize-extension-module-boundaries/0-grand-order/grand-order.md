@@ -99,7 +99,7 @@ Scroll Progressの現在コードを、buildなしの構成を保ったまま、
 
 | No. | Mission | 状態 | 依存 | 備考 |
 |---:|---|---|---|---|
-| 1 | runtime messageの契約を明示する | 未着手 | なし | typeとresponse形を固定する |
+| 1 | runtime messageの契約を明示する | 完了 | なし | typeとresponse形を固定する |
 | 2 | badge表示の判断をテスト可能にする | 未着手 | Mission 1 | `OFF` 表示条件をpure function化する |
 | 3 | indicator表示文字の生成をテスト可能にする | 未着手 | なし | `progress + ' %'` を固定する |
 | 4 | content scriptの起動処理を整理する | 未着手 | Mission 1, 3 | イベント登録と状態更新を読みやすくする |
@@ -109,7 +109,7 @@ Mission一覧は初期仮説として扱う。実装結果に応じて追加、�
 
 ## 現在のMission
 
-Mission 1を次に着手する。
+Mission 1は完了。次のMissionはMission 2を候補にする。
 
 ## 未確定事項
 
@@ -121,3 +121,4 @@ Mission 1を次に着手する。
 - Grand Order 1は公開・保守基盤復旧が主目的だったため、以後のコード境界整理はGrand Order 2として分ける。
 - TypeScriptやbundlerは今回の改善対象にしない。現在の軽量なbuildなし構成を維持する。
 - 追加permissionは今回の改善範囲では不要と判断する。
+- Mission 1では、toggle messageとresponseの作成・判定を `core.js` に寄せ、Node標準テストで固定した。

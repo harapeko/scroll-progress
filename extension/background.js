@@ -11,13 +11,15 @@ importScripts('core.js', 'badge.js')
       return
     }
 
-    chrome.tabs.sendMessage(tab.id, { type: core.TOGGLE_MESSAGE_TYPE }, function (response) {
-      if (chrome.runtime.lastError || !response) {
+    chrome.tabs.sendMessage(tab.id, core.createToggleMessage(), function (response) {
+      var enabled = core.readEnabledResponse(response)
+
+      if (chrome.runtime.lastError || enabled === null) {
         badge.clear(tab.id)
         return
       }
 
-      badge.update(tab.id, core.normalizeEnabled(response.enabled))
+      badge.update(tab.id, enabled)
     })
   })
 
