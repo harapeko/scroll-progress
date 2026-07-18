@@ -6,5 +6,5 @@ output="$repo_root/scroll_progress.zip"
 
 rm -f "$output"
 
-cd "$repo_root"
-zip -r -X "$output" scroll_progress -x "*/.DS_Store" -x "__MACOSX/*"
+cd "$repo_root/scroll_progress"
+zip -r -X "$output" manifest.json core.js scroll_progress.js icons screenshot.png
