@@ -25,7 +25,6 @@
     element.style.borderRadius = '0 3px 0 0'
     element.style.pointerEvents = 'none'
     element.style.userSelect = 'none'
-    element.style.webkitUserSelect = 'none'
 
     return element
   }

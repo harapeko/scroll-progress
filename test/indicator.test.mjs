@@ -8,6 +8,7 @@ const source = fs.readFileSync(new URL('../extension/indicator.js', import.meta.
 function runIndicatorScript() {
   const attributes = new Map()
   const calls = { appended: 0, removed: 0 }
+  // noinspection JSUnusedGlobalSymbols -- VM内で評価するindicator scriptから参照する。
   const element = {
     id: '',
     isConnected: false,
@@ -83,7 +84,6 @@ test('indicatorは表示に必要な属性とstyleを設定する', () => {
     pointerEvents: 'none',
     position: 'fixed',
     userSelect: 'none',
-    webkitUserSelect: 'none',
     zIndex: '99999999',
   })
 })

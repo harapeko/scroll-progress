@@ -20,6 +20,7 @@ function createThrottleFixture(initialTime = 1000) {
   /** @type {Map<number, { callback: () => void, runAt: number }>} */
   const timers = new Map()
 
+  // noinspection JSUnusedGlobalSymbols -- VM内で評価するcore scriptから参照する。
   const throttleContext = {
     Date: {
       now() {
