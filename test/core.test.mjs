@@ -125,6 +125,21 @@ test('calculateDocumentProgressはscrollingElementがない場合にdocumentElem
   assert.equal(core.calculateDocumentProgress(documentObject, windowObject), 30)
 })
 
+test('calculateElementProgressはelementの表示領域から進捗を計算する', () => {
+  assert.equal(
+    core.calculateElementProgress({ clientHeight: 100, scrollHeight: 500, scrollTop: 100 }),
+    25
+  )
+  assert.equal(
+    core.calculateElementProgress({ clientHeight: 100, scrollHeight: 500, scrollTop: 500 }),
+    100
+  )
+  assert.equal(
+    core.calculateElementProgress({ clientHeight: 100, scrollHeight: 100, scrollTop: 0 }),
+    null
+  )
+})
+
 test('shouldAttachIndicatorはbody overflow autoを既存どおり除外する', () => {
   assert.equal(core.shouldAttachIndicator({ overflowY: 'auto' }), false)
   assert.equal(core.shouldAttachIndicator({ overflowY: 'visible' }), true)

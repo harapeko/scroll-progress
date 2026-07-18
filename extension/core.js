@@ -43,6 +43,16 @@
   }
 
   /**
+   * elementから現在のスクロール率を計算する。
+   *
+   * @param {ScrollProgressElement} element
+   * @returns {number | null}
+   */
+  function calculateElementProgress(element) {
+    return calculateProgress(element.scrollTop, element.scrollHeight, element.clientHeight)
+  }
+
+  /**
    * 既知の不得意なbodyスクロール構成では動かさない。
    *
    * @param {{ overflowY: string }} bodyStyle
@@ -166,6 +176,7 @@
   global.ScrollProgressCore = {
     INDICATOR_ID,
     calculateDocumentProgress,
+    calculateElementProgress,
     calculateProgress,
     createToggleMessage,
     createToggleResponse,

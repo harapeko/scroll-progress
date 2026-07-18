@@ -90,8 +90,8 @@ document全体、固定shell内のscroll area、複数ペイン、標準Fullscre
 | No. | Mission | 状態 | 依存 | 備考 |
 |---:|---|---|---|---|
 | 1 | Fullscreen中の非表示と復帰 | 完了 | なし | 標準Fullscreen API |
-| 2 | documentとelementの進捗計算を共通化 | 進行中 | Mission 1 | 純粋なmetrics処理 |
-| 3 | 操作中のscroll areaへ追随 | 未着手 | Mission 2 | capture phaseを使用 |
+| 2 | documentとelementの進捗計算を共通化 | 完了 | Mission 1 | 純粋なmetrics処理 |
+| 3 | 操作中のscroll areaへ追随 | 進行中 | Mission 2 | capture phaseを使用 |
 | 4 | layout変化時の再計算 | 未着手 | Mission 3 | resizeと非scrollable化 |
 | 5 | READMEへ対応layoutを図示 | 未着手 | Mission 1-4 | 対応表とMermaid |
 
@@ -99,7 +99,7 @@ Mission一覧は初期仮説として扱う。実装結果に応じて追加、�
 
 ## 現在のMission
 
-Mission 2を実施中。documentとelementから同じ形式で進捗を計算する。
+Mission 3を実施中。実際にscrollされたareaを進捗sourceとして追跡する。
 
 ## 未確定事項
 
@@ -112,3 +112,4 @@ Mission 2を実施中。documentとelementから同じ形式で進捗を計算�
 - elementの候補を起動時に全走査せず、実際のscroll eventから追跡する。
 - 複数ペインへindicatorを複製せず、最後に操作されたsourceを表示する。
 - Mission 1では、Fullscreen開始時にindicatorを外し、解除後に現在進捗へ復帰するようにした。
+- Mission 2では、documentの既存計算を維持し、elementの `clientHeight` を使う計算を追加した。

@@ -1,14 +1,18 @@
 export {}
 
 declare global {
-  interface ScrollProgressElement {
+  interface ScrollProgressMetrics {
     scrollHeight: number
     scrollTop: number
   }
 
+  interface ScrollProgressElement extends ScrollProgressMetrics {
+    clientHeight: number
+  }
+
   interface ScrollProgressDocument {
-    documentElement: ScrollProgressElement
-    scrollingElement?: ScrollProgressElement | null
+    documentElement: ScrollProgressMetrics
+    scrollingElement?: ScrollProgressMetrics | null
   }
 
   interface ScrollProgressCoreApi {
@@ -17,6 +21,7 @@ declare global {
       documentObject: ScrollProgressDocument,
       windowObject: { innerHeight: number },
     ): number | null
+    calculateElementProgress(element: ScrollProgressElement): number | null
     calculateProgress(
       scrollTop: number,
       scrollHeight: number,
