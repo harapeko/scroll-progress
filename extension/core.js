@@ -115,6 +115,16 @@
   }
 
   /**
+   * indicatorへ表示する文字を作る。
+   *
+   * @param {number} progress
+   * @returns {string}
+   */
+  function getIndicatorText(progress) {
+    return progress + ' %'
+  }
+
+  /**
    * ページ本文の選択やコピーに、拡張の表示文字を混ぜない。
    *
    * @param {{ setAttribute: Function, style: Object }} element
@@ -168,6 +178,7 @@
     createToggleMessage: createToggleMessage,
     createToggleResponse: createToggleResponse,
     getBadgeText: getBadgeText,
+    getIndicatorText: getIndicatorText,
     keepIndicatorOutOfPageSelection: keepIndicatorOutOfPageSelection,
     isToggleMessage: isToggleMessage,
     normalizeEnabled: normalizeEnabled,

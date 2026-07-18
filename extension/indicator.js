@@ -11,7 +11,7 @@
   function create() {
     var element = document.createElement('div')
     element.setAttribute('id', core.INDICATOR_ID)
-    element.textContent = '0 %'
+    element.textContent = core.getIndicatorText(0)
     element.style.position = 'fixed'
     element.style.left = '0'
     element.style.bottom = '0'
@@ -56,7 +56,7 @@
    * @param {number} progress
    */
   function update(element, progress) {
-    element.textContent = progress + ' %'
+    element.textContent = core.getIndicatorText(progress)
   }
 
   global.ScrollProgressIndicator = {

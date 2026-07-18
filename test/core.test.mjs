@@ -91,6 +91,12 @@ test('getBadgeTextはOFF時だけ表示文字を返す', () => {
   assert.equal(core.getBadgeText(undefined), '')
 })
 
+test('getIndicatorTextは進捗値に単位を付ける', () => {
+  assert.equal(core.getIndicatorText(0), '0 %')
+  assert.equal(core.getIndicatorText(37), '37 %')
+  assert.equal(core.getIndicatorText(100), '100 %')
+})
+
 test('keepIndicatorOutOfPageSelectionは拡張表示を本文コピーから外しやすくする', () => {
   const attributes = new Map()
   const element = {

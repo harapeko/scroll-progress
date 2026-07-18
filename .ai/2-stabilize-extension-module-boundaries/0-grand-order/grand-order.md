@@ -101,7 +101,7 @@ Scroll Progressの現在コードを、buildなしの構成を保ったまま、
 |---:|---|---|---|---|
 | 1 | runtime messageの契約を明示する | 完了 | なし | typeとresponse形を固定する |
 | 2 | badge表示の判断をテスト可能にする | 完了 | Mission 1 | `OFF` 表示条件をpure function化する |
-| 3 | indicator表示文字の生成をテスト可能にする | 未着手 | なし | `progress + ' %'` を固定する |
+| 3 | indicator表示文字の生成をテスト可能にする | 完了 | なし | `progress + ' %'` を固定する |
 | 4 | content scriptの起動処理を整理する | 未着手 | Mission 1, 3 | イベント登録と状態更新を読みやすくする |
 | 5 | service workerのmessage失敗時挙動を明示する | 未着手 | Mission 1, 2 | content script不在タブの扱い |
 
@@ -109,7 +109,7 @@ Mission一覧は初期仮説として扱う。実装結果に応じて追加、�
 
 ## 現在のMission
 
-Mission 2は完了。次のMissionはMission 3を候補にする。
+Mission 3は完了。次のMissionはMission 4を候補にする。
 
 ## 未確定事項
 
@@ -123,3 +123,4 @@ Mission 2は完了。次のMissionはMission 3を候補にする。
 - 追加permissionは今回の改善範囲では不要と判断する。
 - Mission 1では、toggle messageとresponseの作成・判定を `core.js` に寄せ、Node標準テストで固定した。
 - Mission 2では、badge表示文字の判断を `core.getBadgeText()` に寄せ、Node標準テストで固定した。
+- Mission 3では、indicator表示文字の生成を `core.getIndicatorText()` に寄せ、初期表示と更新処理で共有した。
