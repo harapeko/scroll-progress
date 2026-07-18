@@ -2,6 +2,7 @@
   'use strict'
 
   var INDICATOR_ID = 'extension-scroll_progress'
+  var TOGGLE_MESSAGE_TYPE = 'toggle-scroll-progress'
 
   /**
    * スクロール量を0から100の整数に丸める。
@@ -31,6 +32,16 @@
    */
   function shouldAttachIndicator(bodyStyle) {
     return bodyStyle.overflowY !== 'auto'
+  }
+
+  /**
+   * 明示的なfalse以外は、既定どおり表示する。
+   *
+   * @param {unknown} value
+   * @returns {boolean}
+   */
+  function normalizeEnabled(value) {
+    return value !== false
   }
 
   /**
@@ -81,8 +92,10 @@
 
   global.ScrollProgressCore = {
     INDICATOR_ID: INDICATOR_ID,
+    TOGGLE_MESSAGE_TYPE: TOGGLE_MESSAGE_TYPE,
     calculateProgress: calculateProgress,
     keepIndicatorOutOfPageSelection: keepIndicatorOutOfPageSelection,
+    normalizeEnabled: normalizeEnabled,
     shouldAttachIndicator: shouldAttachIndicator,
     throttle: throttle,
   }

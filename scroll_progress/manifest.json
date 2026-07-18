@@ -3,6 +3,12 @@
   "name": "Scroll Progress",
   "version": "1.0.3",
   "description": "Shows the scroll progress of current page.",
+  "action": {
+    "default_title": "Toggle Scroll Progress"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
   "icons": {
     "16": "icons/icon@16px.png",
     "48": "icons/icon@48px.png",

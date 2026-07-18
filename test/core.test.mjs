@@ -30,6 +30,17 @@ test('shouldAttachIndicatorはbody overflow autoを既存どおり除外する',
   assert.equal(core.shouldAttachIndicator({ overflowY: 'visible' }), true)
 })
 
+test('normalizeEnabledはfalseだけを無効扱いにする', () => {
+  assert.equal(core.normalizeEnabled(false), false)
+  assert.equal(core.normalizeEnabled(true), true)
+  assert.equal(core.normalizeEnabled(undefined), true)
+  assert.equal(core.normalizeEnabled('off'), true)
+})
+
+test('TOGGLE_MESSAGE_TYPEはcontent scriptとbackgroundで共有する', () => {
+  assert.equal(core.TOGGLE_MESSAGE_TYPE, 'toggle-scroll-progress')
+})
+
 test('keepIndicatorOutOfPageSelectionは拡張表示を本文コピーから外しやすくする', () => {
   const attributes = new Map()
   const element = {
