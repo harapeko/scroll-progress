@@ -1,66 +1,81 @@
-Scroll Progress
-===============
+# Scroll Progress
 
-A small chrome extension showing the scroll progress of current page.
+A small Chrome extension that shows the vertical scroll progress of the area you are reading.
 
-Scroll progress is displayed at the bottom left.
-Click the extension icon to hide or show it for the current tab.
+The progress is displayed at the bottom left. Click the extension icon to hide or show it for the current tab.
 
-When is the timing?
+## Supported Layouts
 
-- load event
-- scroll event
+| Layout | Behavior |
+|---|---|
+| Standard document | Shows the progress of the document viewport. |
+| Fixed shell with a scrollable body or panel | Follows the element after it starts scrolling. |
+| Multiple scrollable panes | Follows the pane that was scrolled most recently. |
+| Viewport resize | Recalculates the current scroll area. |
+| Standard Fullscreen API | Hides during fullscreen and restores after fullscreen ends. |
 
-Screenshot
-----------
+```mermaid
+flowchart LR
+  subgraph standard["Standard document"]
+    document["Document viewport<br/>vertical scroll"]
+  end
 
-![screenshot](http://i.imgur.com/BG4nZrK.png)
+  subgraph shell["Fixed shell"]
+    header["Fixed header"]
+    content["Scrollable content<br/>vertical scroll"]
+    header --> content
+  end
 
-The progress is shown at the lower left corner of the window.
+  subgraph split["Multiple panes"]
+    paneA["Pane A<br/>vertical scroll"]
+    paneB["Pane B<br/>vertical scroll"]
+  end
+```
 
-Install
------
+The extension starts with the document viewport. A scroll event from an element makes that element the active scroll area. In a multi-pane layout, the latest scrolled pane wins.
+
+```mermaid
+flowchart TD
+  event["load, scroll, resize, or fullscreenchange"] --> fullscreen{"Standard fullscreen active?"}
+  fullscreen -- Yes --> hide["Hide the indicator"]
+  fullscreen -- No --> target{"Active scroll source"}
+  target -- "Document or initial state" --> documentProgress["Calculate document progress"]
+  target -- "Last scrolled element" --> elementProgress["Calculate element progress"]
+  documentProgress --> range{"Vertical scroll range exists?"}
+  elementProgress --> range
+  range -- Yes --> show["Show and update the indicator"]
+  range -- No --> hide
+```
+
+## Limits
+
+- Horizontal scroll progress is not supported.
+- Scroll areas inside cross-origin iframes are not observed.
+- Scroll areas inside closed shadow roots are not observed.
+- Site-specific CSS pseudo-fullscreen modes are not detected.
+- Browser fullscreen started with F11 is not treated as content fullscreen.
+- Only one indicator is shown. It follows the most recently scrolled area.
+
+The behavior is based on the [CSSOM View Module](https://www.w3.org/TR/cssom-view/), [DOM Standard](https://dom.spec.whatwg.org/), and [Fullscreen Standard](https://fullscreen.spec.whatwg.org/).
+
+## Screenshot
+
+![Screenshot](https://i.imgur.com/BG4nZrK.png)
+
+## Install
 
 [Chrome Web Store](https://chromewebstore.google.com/detail/scroll-progress/lcmhhnccfbeinmgacmomlkcahidhjifb)
 
-Privacy
--------
+## Privacy
 
 [Privacy Policy](./PRIVACY.md)
 
-Incompatible
-------------
-- `body` scrollTop() always returns 0.
+## Thanks
 
-ex) http://devdocs.io/
+- https://github.com/adamzap/scroll-progress
+- https://github.com/qiao/scroll-progress
 
-This site's `body` is `overflow: auto`.
-
-In other words `body` scroll not work.
-
-Do not run this extention.
-
-- `load` event not display.
-
-ex) https://feedly.com/i/welcome
-
-maybe, view override...?
-
-- Site's original JS reseize Fixing.
-
-ex) http://demos.telerik.com/kendo-ui/mvvm/
-
-`#main` is Fixing.
-
-Thanks
-------
-
-https://github.com/adamzap/scroll-progress
-
-https://github.com/qiao/scroll-progress
-
-License
--------
+## License
 
 [MIT License](http://www.opensource.org/licenses/mit-license.php)
 

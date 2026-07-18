@@ -93,13 +93,13 @@ document全体、固定shell内のscroll area、複数ペイン、標準Fullscre
 | 2 | documentとelementの進捗計算を共通化 | 完了 | Mission 1 | 純粋なmetrics処理 |
 | 3 | 操作中のscroll areaへ追随 | 完了 | Mission 2 | capture phaseを使用 |
 | 4 | layout変化時の再計算 | 完了 | Mission 3 | resizeと非scrollable化 |
-| 5 | READMEへ対応layoutを図示 | 進行中 | Mission 1-4 | 対応表とMermaid |
+| 5 | READMEへ対応layoutを図示 | 完了 | Mission 1-4 | 対応表とMermaid |
 
 Mission一覧は初期仮説として扱う。実装結果に応じて追加、分割、統合、並べ替えを行ってよい。ただし、完了済みMissionの意味を後から別の成果へ変更しないこと。
 
 ## 現在のMission
 
-Mission 5を実施中。対応layout、制約、判定フローをREADMEへ記載する。
+Mission 5は完了。Grand Order 6の完了条件を満たした。
 
 ## 未確定事項
 
@@ -115,3 +115,4 @@ Mission 5を実施中。対応layout、制約、判定フローをREADMEへ記�
 - Mission 2では、documentの既存計算を維持し、elementの `clientHeight` を使う計算を追加した。
 - Mission 3では、scroll eventをcaptureし、最後に操作されたElementを進捗sourceとして追跡するようにした。
 - Mission 4では、resize時に再計算し、source切断と非scrollable化で古い表示を残さないようにした。
+- Mission 5では、対応layoutとsource判定をREADMEの表とMermaid図へ反映した。
