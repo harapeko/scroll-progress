@@ -31,12 +31,10 @@ importScripts('core.js', 'badge.js')
    *
    * @param {chrome.tabs.Tab} tab
    */
-  function handleActionClick(tab) {
-    if (typeof tab.id !== 'number') {
+  function handleActionClick({ id: tabId }) {
+    if (typeof tabId !== 'number') {
       return
     }
-
-    const tabId = tab.id
 
     // noinspection JSIgnoredPromiseFromCall -- callback版はPromiseを返さない。
     chrome.tabs.sendMessage(tabId, core.createToggleMessage(), function (response) {

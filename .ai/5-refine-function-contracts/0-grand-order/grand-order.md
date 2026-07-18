@@ -105,10 +105,11 @@ extension内の各関数を、責務、入力、戻り値、所有moduleが読�
 | 3 | adapter関数を整理する | 完了 | Mission 1, 2 | content/background/badge |
 | 4 | throttleの実行状態を集約する | 完了 | Mission 1 | 先頭・末尾の実行契約を維持 |
 | 5 | badge反映の失敗分岐を集約する | 完了 | Mission 3 | 送信失敗をresponseより優先 |
+| 6 | action tab IDのbindingを簡潔にする | 完了 | Mission 3 | callbackまで数値IDを固定 |
 
 ## 現在のMission
 
-Mission 5は完了。Grand Order 5の完了条件を満たした。
+Mission 6は完了。Grand Order 5の完了条件を満たした。
 
 ## 未確定事項
 
@@ -127,3 +128,5 @@ Mission 5は完了。Grand Order 5の完了条件を満たした。
 - Mission 4では、throttleの実行状態を集約し、時刻0でも最初の呼び出しを即時実行することをテストした。
 - 送信失敗と不正responseはどちらもbadgeを消すため、状態の読み取り結果を `null` に揃えて扱う。
 - Mission 5では、送信失敗を正常形式のresponseより優先することをテストで固定した。
+- action handlerはtab IDだけを使うため、引数の分割代入で数値判定後のbindingを保持する。
+- Mission 6では、tab IDの移し替えを削除し、既存の送信処理と失敗処理を維持した。
