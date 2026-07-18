@@ -77,7 +77,12 @@
    * @returns {boolean}
    */
   function isToggleMessage(message) {
-    return Boolean(message && message.type === TOGGLE_MESSAGE_TYPE)
+    return Boolean(
+      typeof message === 'object' &&
+        message !== null &&
+        'type' in message &&
+        message.type === TOGGLE_MESSAGE_TYPE
+    )
   }
 
   /**
@@ -97,7 +102,12 @@
    * @returns {boolean | null}
    */
   function readEnabledResponse(response) {
-    if (!response || typeof response.enabled === 'undefined') {
+    if (
+      typeof response !== 'object' ||
+      response === null ||
+      !('enabled' in response) ||
+      typeof response.enabled === 'undefined'
+    ) {
       return null
     }
 
@@ -127,7 +137,7 @@
   /**
    * ページ本文の選択やコピーに、拡張の表示文字を混ぜない。
    *
-   * @param {{ setAttribute: Function, style: Object }} element
+   * @param {IndicatorSelectionElement} element
    */
   function keepIndicatorOutOfPageSelection(element) {
     element.setAttribute('aria-hidden', 'true')
@@ -139,37 +149,40 @@
   /**
    * 指定時間内の呼び出し回数を抑える。
    *
-   * @param {Function} callback
+   * @param {() => void} callback
    * @param {number} wait
-   * @returns {Function}
+   * @returns {() => void}
    */
   function throttle(callback, wait) {
+    /** @type {ReturnType<typeof setTimeout> | null} */
     let timeout = null
     let previous = 0
 
     return function () {
       const now = Date.now()
       const remaining = wait - (now - previous)
-      const context = this
-      const args = arguments
 
       if (remaining <= 0) {
-        clearTimeout(timeout)
+        if (timeout !== null) {
+          clearTimeout(timeout)
+        }
         timeout = null
         previous = now
-        return callback.apply(context, args)
+        callback()
+        return
       }
 
       if (!timeout) {
         timeout = setTimeout(function () {
           previous = Date.now()
           timeout = null
-          callback.apply(context, args)
+          callback()
         }, remaining)
       }
     }
   }
 
+  // noinspection JSUnusedGlobalSymbols -- manifest経由で別scriptから参照する。
   global.ScrollProgressCore = {
     INDICATOR_ID: INDICATOR_ID,
     TOGGLE_MESSAGE_TYPE: TOGGLE_MESSAGE_TYPE,

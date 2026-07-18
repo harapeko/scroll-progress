@@ -5,13 +5,33 @@ import vm from 'node:vm'
 
 const source = fs.readFileSync(new URL('../extension/content.js', import.meta.url), 'utf8')
 
+/**
+ * @typedef {(
+ *   message: unknown,
+ *   sender: unknown,
+ *   sendResponse: (response: { enabled: boolean }) => void
+ * ) => void} RuntimeMessageListener
+ */
+
+/**
+ * @param {{ progress?: number, shouldAttach?: boolean }} [options]
+ */
 function runContentScript(options = {}) {
+  /**
+   * @type {{
+   *   hidden: number,
+   *   shown: number,
+   *   throttleWaits: number[],
+   *   updated: number[]
+   * }}
+   */
   const calls = {
     hidden: 0,
     shown: 0,
     throttleWaits: [],
     updated: [],
   }
+  /** @type {{ runtime: RuntimeMessageListener | null, window: Map<string, () => void> }} */
   const listeners = {
     runtime: null,
     window: new Map(),
@@ -20,23 +40,31 @@ function runContentScript(options = {}) {
   const progress = options.progress ?? 25
   const shouldAttach = options.shouldAttach ?? true
 
+  // noinspection JSUnusedGlobalSymbols -- VM内で評価するcontent scriptから参照する。
   const context = {
     ScrollProgressCore: {
       calculateDocumentProgress() {
         return progress
       },
+      /** @param {unknown} enabled */
       createToggleResponse(enabled) {
         return { enabled }
       },
+      /** @param {{ type?: string } | null | undefined} message */
       isToggleMessage(message) {
         return message?.type === 'toggle-scroll-progress'
       },
+      /** @param {unknown} value */
       normalizeEnabled(value) {
         return value !== false
       },
       shouldAttachIndicator() {
         return shouldAttach
       },
+      /**
+       * @param {() => void} callback
+       * @param {number} wait
+       */
       throttle(callback, wait) {
         calls.throttleWaits.push(wait)
         return callback
@@ -46,14 +74,20 @@ function runContentScript(options = {}) {
       create() {
         return indicatorElement
       },
+      /** @param {object} element */
       hide(element) {
         assert.equal(element, indicatorElement)
         calls.hidden += 1
       },
+      /** @param {object} element */
       show(element) {
         assert.equal(element, indicatorElement)
         calls.shown += 1
       },
+      /**
+       * @param {object} element
+       * @param {number} value
+       */
       update(element, value) {
         assert.equal(element, indicatorElement)
         calls.updated.push(value)
@@ -62,6 +96,7 @@ function runContentScript(options = {}) {
     chrome: {
       runtime: {
         onMessage: {
+          /** @param {RuntimeMessageListener} listener */
           addListener(listener) {
             listeners.runtime = listener
           },
@@ -73,6 +108,10 @@ function runContentScript(options = {}) {
       return { overflowY: 'visible' }
     },
     window: {
+      /**
+       * @param {string} type
+       * @param {() => void} listener
+       */
       addEventListener(type, listener) {
         listeners.window.set(type, listener)
       },
@@ -98,13 +137,16 @@ test('content scriptは対応ページで表示とlistener登録を開始する'
 
 test('content scriptはtoggle要求ごとに表示状態を反転する', () => {
   const { calls, listeners } = runContentScript()
+  /** @type {Array<{ enabled: boolean }>} */
   const responses = []
+  const runtimeListener = listeners.runtime
+  assert.ok(runtimeListener)
 
-  listeners.runtime({ type: 'other' }, null, (response) => responses.push(response))
-  listeners.runtime({ type: 'toggle-scroll-progress' }, null, (response) =>
+  runtimeListener({ type: 'other' }, null, (response) => responses.push(response))
+  runtimeListener({ type: 'toggle-scroll-progress' }, null, (response) =>
     responses.push(response)
   )
-  listeners.runtime({ type: 'toggle-scroll-progress' }, null, (response) =>
+  runtimeListener({ type: 'toggle-scroll-progress' }, null, (response) =>
     responses.push(response)
   )
 

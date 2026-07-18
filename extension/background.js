@@ -34,8 +34,10 @@ importScripts('core.js', 'badge.js')
       return
     }
 
-    chrome.tabs.sendMessage(tab.id, core.createToggleMessage(), function (response) {
-      applyToggleResponse(tab.id, response)
+    const tabId = tab.id
+
+    chrome.tabs.sendMessage(tabId, core.createToggleMessage(), function (response) {
+      applyToggleResponse(tabId, response)
     })
   }
 

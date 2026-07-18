@@ -1,4 +1,5 @@
 *.pem
 /.DS_Store
 /.idea/
+/node_modules/
 /extension.zip

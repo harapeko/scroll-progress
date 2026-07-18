@@ -59,6 +59,7 @@
     element.textContent = core.getIndicatorText(progress)
   }
 
+  // noinspection JSUnusedGlobalSymbols -- manifest経由で別scriptから参照する。
   global.ScrollProgressIndicator = {
     create: create,
     hide: hide,

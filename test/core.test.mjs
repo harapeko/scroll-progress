@@ -4,12 +4,14 @@ import test from 'node:test'
 import vm from 'node:vm'
 
 const source = fs.readFileSync(new URL('../extension/core.js', import.meta.url), 'utf8')
+/** @type {{ globalThis: { ScrollProgressCore?: ScrollProgressCoreApi } }} */
 const context = { globalThis: {} }
 
 vm.createContext(context)
 vm.runInContext(source, context)
 
 const core = context.globalThis.ScrollProgressCore
+assert.ok(core)
 
 test('calculateProgressはスクロール率を整数にする', () => {
   assert.equal(core.calculateProgress(50, 200, 100), 50)
@@ -99,6 +101,8 @@ test('getIndicatorTextは進捗値に単位を付ける', () => {
 
 test('keepIndicatorOutOfPageSelectionは拡張表示を本文コピーから外しやすくする', () => {
   const attributes = new Map()
+  /** @type {IndicatorSelectionElement} */
+  // noinspection JSUnusedGlobalSymbols -- 評価対象へ渡す要素のfixture。
   const element = {
     setAttribute(name, value) {
       attributes.set(name, value)

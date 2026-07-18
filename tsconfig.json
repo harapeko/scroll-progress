@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "module": "es2022",
+    "moduleDetection": "force",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "strict": true,
+    "target": "es2022",
+    "types": ["chrome", "node"]
+  },
+  "include": ["extension/**/*.js", "test/**/*.mjs", "types/**/*.d.ts"]
+}
