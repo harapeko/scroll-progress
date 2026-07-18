@@ -7,7 +7,7 @@ const source = fs.readFileSync(new URL('../extension/indicator.js', import.meta.
 
 function runIndicatorScript() {
   const attributes = new Map()
-  const calls = { appended: 0, removed: 0 }
+  const calls = { appended: 0, appendedToDocumentElement: 0, removed: 0 }
   // noinspection JSUnusedGlobalSymbols -- VM内で評価するindicator scriptから参照する。
   const element = {
     id: '',
@@ -37,12 +37,14 @@ function runIndicatorScript() {
       },
     },
     document: {
-      body: {
+      body: null,
+      documentElement: {
         /** @param {object} appendedElement */
         appendChild(appendedElement) {
           assert.equal(appendedElement, element)
           element.isConnected = true
           calls.appended += 1
+          calls.appendedToDocumentElement += 1
         },
       },
       /** @param {string} tagName */
@@ -93,6 +95,14 @@ test('indicatorは表示に必要な属性とstyleを設定する', () => {
     whiteSpace: 'nowrap',
     zIndex: '99999999',
   })
+})
+
+test('indicatorはbodyを使わずdocument elementへ追加する', () => {
+  const { calls, indicator } = runIndicatorScript()
+
+  indicator.show(indicator.create())
+
+  assert.equal(calls.appendedToDocumentElement, 1)
 })
 
 test('indicatorは同じelementを二重に追加しない', () => {

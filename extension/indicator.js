@@ -43,7 +43,7 @@
    */
   function show(element) {
     if (!element.isConnected) {
-      document.body.appendChild(element)
+      document.documentElement.appendChild(element)
     }
   }
 
