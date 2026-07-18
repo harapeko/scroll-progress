@@ -104,10 +104,11 @@ extension内の各関数を、責務、入力、戻り値、所有moduleが読�
 | 2 | indicatorへDOM責務を集める | 完了 | Mission 1 | 直接テストを追加 |
 | 3 | adapter関数を整理する | 完了 | Mission 1, 2 | content/background/badge |
 | 4 | throttleの実行状態を集約する | 完了 | Mission 1 | 先頭・末尾の実行契約を維持 |
+| 5 | badge反映の失敗分岐を集約する | 完了 | Mission 3 | 送信失敗をresponseより優先 |
 
 ## 現在のMission
 
-Mission 4は完了。Grand Order 5の完了条件を満たした。
+Mission 5は完了。Grand Order 5の完了条件を満たした。
 
 ## 未確定事項
 
@@ -124,3 +125,5 @@ Mission 4は完了。Grand Order 5の完了条件を満たした。
 - Mission 3では、adapter関数の名前、引数型、error処理順を実際の呼び出しへ合わせた。
 - throttleの利用箇所は引数と `this` を使わないため、callback引数の転送は公開契約へ追加しない。
 - Mission 4では、throttleの実行状態を集約し、時刻0でも最初の呼び出しを即時実行することをテストした。
+- 送信失敗と不正responseはどちらもbadgeを消すため、状態の読み取り結果を `null` に揃えて扱う。
+- Mission 5では、送信失敗を正常形式のresponseより優先することをテストで固定した。

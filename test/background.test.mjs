@@ -130,13 +130,13 @@ test('service workerはaction clickをcontent scriptへ送る', () => {
   assert.deepEqual(calls.badgeClears, [])
 })
 
-test('service workerは受信先がない場合に古いbadgeを消す', () => {
+test('service workerは送信失敗時にresponseを反映せず古いbadgeを消す', () => {
   const { calls, listeners, respond } = runBackgroundScript()
   const actionClick = listeners.actionClick
   assert.ok(actionClick)
 
   actionClick({ id: 21 })
-  respond(undefined, { message: 'Receiving end does not exist.' })
+  respond({ enabled: true }, { message: 'Receiving end does not exist.' })
 
   assert.deepEqual(calls.badgeUpdates, [])
   assert.deepEqual(calls.badgeClears, [21])

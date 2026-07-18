@@ -13,14 +13,11 @@ importScripts('core.js', 'badge.js')
    * @param {unknown} response
    */
   function updateBadgeFromResponse(tabId, response) {
-    if (chrome.runtime.lastError) {
-      badge.clear(tabId)
-      return
-    }
+    const enabled = chrome.runtime.lastError
+      ? null
+      : core.readEnabledResponse(response)
 
-    const enabled = core.readEnabledResponse(response)
-
-    // responseが不正な場合は、古い表示を残さない。
+    // 送信失敗または不正なresponseでは、古い表示を残さない。
     if (enabled === null) {
       badge.clear(tabId)
       return
