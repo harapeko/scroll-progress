@@ -21,11 +21,16 @@
       return
     }
 
+    if (activeScrollElement && !activeScrollElement.isConnected) {
+      activeScrollElement = null
+    }
+
     const progress = activeScrollElement
       ? core.calculateElementProgress(activeScrollElement)
       : core.calculateDocumentProgress(document, window)
 
     if (progress === null) {
+      indicator.hide(indicatorElement)
       return
     }
 
@@ -94,6 +99,7 @@
     document.addEventListener('fullscreenchange', updateProgress)
     document.addEventListener('scroll', handleScroll, true)
     window.addEventListener('load', updateProgress)
+    window.addEventListener('resize', throttledUpdateProgress)
   }
 
   /**

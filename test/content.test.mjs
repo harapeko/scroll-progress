@@ -49,7 +49,13 @@ function runContentScript(options = {}) {
   }
   const indicatorElement = {}
   const progress = options.progress === undefined ? 25 : options.progress
-  class ElementStub {}
+  class ElementStub {
+    /** @param {number | null} elementProgress */
+    constructor(elementProgress) {
+      this.isConnected = true
+      this.progress = elementProgress
+    }
+  }
   const documentObject = {
     body: {},
     /** @type {object | null} */
@@ -69,7 +75,7 @@ function runContentScript(options = {}) {
       calculateDocumentProgress() {
         return progress
       },
-      /** @param {{ progress?: number }} element */
+      /** @param {{ progress?: number | null }} element */
       calculateElementProgress(element) {
         calls.elementSources.push(element)
         return element.progress ?? null
@@ -149,7 +155,7 @@ function runContentScript(options = {}) {
     },
     /** @param {number} elementProgress */
     createScrollElement(elementProgress) {
-      return Object.assign(new ElementStub(), { progress: elementProgress })
+      return new ElementStub(elementProgress)
     },
   }
 }
@@ -160,6 +166,7 @@ test('content scriptは対応ページで表示とlistener登録を開始する'
   assert.equal(typeof listeners.runtime, 'function')
   assert.equal(typeof listeners.document.get('fullscreenchange'), 'function')
   assert.equal(typeof listeners.window.get('load'), 'function')
+  assert.equal(typeof listeners.window.get('resize'), 'function')
   assert.equal(typeof listeners.document.get('scroll'), 'function')
   assert.deepEqual(calls.throttleWaits, [100])
   assert.equal(calls.shown, 1)
@@ -194,6 +201,58 @@ test('content scriptはDocumentのscrollへ戻る', () => {
   scroll({ target: {} })
 
   assert.deepEqual(calls.updated, [45, 80, 45])
+})
+
+test('content scriptはresize後にactive elementを再計算する', () => {
+  const { calls, createScrollElement, listeners } = runContentScript({ progress: 10 })
+  const scroll = /** @type {((event: { target: unknown }) => void) | undefined} */ (
+    listeners.document.get('scroll')
+  )
+  const resize = listeners.window.get('resize')
+  assert.ok(scroll)
+  assert.ok(resize)
+  const pane = createScrollElement(20)
+
+  scroll({ target: pane })
+  pane.progress = 65
+  resize()
+
+  assert.deepEqual(calls.updated, [10, 20, 65])
+})
+
+test('content scriptは切断されたelementからDocumentへ戻る', () => {
+  const { calls, createScrollElement, listeners } = runContentScript({ progress: 35 })
+  const scroll = /** @type {((event: { target: unknown }) => void) | undefined} */ (
+    listeners.document.get('scroll')
+  )
+  const resize = listeners.window.get('resize')
+  assert.ok(scroll)
+  assert.ok(resize)
+  const pane = createScrollElement(80)
+
+  scroll({ target: pane })
+  pane.isConnected = false
+  resize()
+
+  assert.deepEqual(calls.updated, [35, 80, 35])
+})
+
+test('content scriptはactive elementがscroll不可になると隠れる', () => {
+  const { calls, createScrollElement, listeners } = runContentScript({ progress: 40 })
+  const scroll = /** @type {((event: { target: unknown }) => void) | undefined} */ (
+    listeners.document.get('scroll')
+  )
+  const resize = listeners.window.get('resize')
+  assert.ok(scroll)
+  assert.ok(resize)
+  const pane = createScrollElement(70)
+
+  scroll({ target: pane })
+  pane.progress = null
+  resize()
+
+  assert.deepEqual(calls.updated, [40, 70])
+  assert.equal(calls.hidden, 1)
 })
 
 test('content scriptはFullscreen中に隠れて解除後に復帰する', () => {
@@ -242,7 +301,9 @@ test('content scriptはdocumentがscroll不可でもelement scrollを待つ', ()
   assert.equal(typeof listeners.runtime, 'function')
   assert.equal(typeof listeners.document.get('scroll'), 'function')
   assert.equal(typeof listeners.window.get('load'), 'function')
+  assert.equal(typeof listeners.window.get('resize'), 'function')
   assert.deepEqual(calls.throttleWaits, [100])
+  assert.equal(calls.hidden, 1)
   assert.equal(calls.shown, 0)
   assert.deepEqual(calls.updated, [])
 })
