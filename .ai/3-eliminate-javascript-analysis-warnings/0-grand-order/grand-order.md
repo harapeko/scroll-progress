@@ -98,12 +98,13 @@ WebStormとリポジトリ内の型検査が、extensionコードとNodeテス�
 | 1 | `var` を `const` と `let` へ置き換える | 完了 | なし | 実行挙動は変えない |
 | 2 | JavaScript型検査の基盤を追加する | 完了 | Mission 1 | Chrome/Node型とtypecheck script |
 | 3 | global APIとVM fixtureの型警告を解消する | 完了 | Mission 2 | 通しの検証を含む |
+| 4 | Chrome APIの非同期完了を明示する | 完了 | Mission 3 | callback誤検知とbadge Promiseを区別する |
 
 Mission一覧は初期仮説として扱う。実装結果に応じて追加、分割、統合、並べ替えを行ってよい。ただし、完了済みMissionの意味を後から別の成果へ変更しないこと。
 
 ## 現在のMission
 
-Mission 3は完了。Grand Order 3の完了条件を満たした。
+Mission 4は完了。Grand Order 3の完了条件を満たした。
 
 ## 未確定事項
 
@@ -119,3 +120,6 @@ Mission 3は完了。Grand Order 3の完了条件を満たした。
 - Mission 3では、global APIの型宣言とVM fixtureの型を追加した。
 - 動的参照に対する `noinspection` は、global APIの公開3か所とVM fixtureの3か所だけに限定した。
 - 当初のMission 4は独立した成果ではないため、Mission 3の完了検証へ統合した。
+- callbackを渡した `tabs.sendMessage` はPromiseを返さないため、WebStormの警告を誤検知として限定抑制する。
+- callbackを渡していないbadge APIはPromiseを返すため、rejectを `badge.js` 内で処理する。
+- badge更新先のタブが終了していた場合は再試行せず、次の操作時に表示を更新する。

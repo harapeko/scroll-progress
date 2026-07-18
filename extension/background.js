@@ -36,6 +36,7 @@ importScripts('core.js', 'badge.js')
 
     const tabId = tab.id
 
+    // noinspection JSIgnoredPromiseFromCall -- callback版はPromiseを返さない。
     chrome.tabs.sendMessage(tabId, core.createToggleMessage(), function (response) {
       applyToggleResponse(tabId, response)
     })
