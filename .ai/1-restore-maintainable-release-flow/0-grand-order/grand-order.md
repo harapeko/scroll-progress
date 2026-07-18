@@ -1,0 +1,86 @@
+# Grand Order: Restore Maintainable Release Flow
+
+## この文書の位置付け
+
+この文書は、Scroll Progressを現在のChrome拡張要件に合わせて保守しやすくするための作業管理資料である。現在状態はソースコード、設定、実行結果を確認して判断する。
+
+## チケット番号
+
+1
+
+## 目的
+
+Scroll Progressを、手作業zipに依存せず検証・パッケージできる状態にする。そのうえで、必要な保守改善を小さなMissionで積み上げられるようにする。
+
+## 背景
+
+- Chrome Web Store上でScroll Progressも更新対象になっている。
+- 別リポジトリで、生成zipの追跡、手作業パッケージ、検証コマンド不足が後戻りの原因になった。
+- このリポジトリには `.ai` と `AGENTS.md` がまだない。
+
+## 要求のSOT
+
+- 業務要件: ここまでの作業で活かせた改善をScroll Progressにも適用する。
+- API仕様: Chrome Extensions Manifest V3。
+- 外部IF: Chrome Web Store。
+- その他: 既存プロダクト挙動を不用意に変えない。
+
+## 対象範囲
+
+- AI作業管理資料
+- zip生成手順
+- 検証コマンド
+- 生成物の追跡除外
+- 後続の保守改善Mission
+
+## 対象外
+
+- 初回Missionでは拡張機能の表示挙動を変えない
+- 初回MissionではChrome Web Store公開workflowを追加しない
+- 初回Missionでは外部ライブラリを追加しない
+
+## 全体処理フロー
+
+1. AI作業管理と再現可能なzip生成を整える。
+2. 現在の拡張機能コードを確認する。
+3. 必要な保守改善を小さなMissionに分ける。
+4. 検証してからChrome Web Storeへ出す。
+
+## 外部依存
+
+- Chrome Extensions
+- Chrome Web Store
+
+## 制約
+
+- 生成zipをコミットしない。
+- 既存のプロダクトコード変更は、Missionごとに分ける。
+- 追加権限は根拠がある場合だけ行う。
+
+## 完了条件
+
+- Grand Order / Ticketで作業を追跡できる
+- zip生成がコマンドで再現できる
+- 手作業生成zipを追跡しない
+- 最低限の検証コマンドがある
+
+## Mission一覧
+
+| No. | Mission | 状態 | 依存 | 備考 |
+|---:|---|---|---|---|
+| 1 | 作業管理とpackage生成基盤を整える | 完了 | なし | プロダクト挙動は変えない |
+
+Mission一覧は初期仮説として扱う。実装結果に応じて追加、分割、統合、並べ替えを行ってよい。ただし、完了済みMissionの意味を後から別の成果へ変更しないこと。
+
+## 現在のMission
+
+Mission 1は完了。次のMissionは未定。
+
+## 未確定事項
+
+- 次に行うプロダクトコード改善の範囲。
+
+## 判断履歴
+
+- 既存の `scroll_progress.zip` には `__MACOSX` が含まれていたため、手作業生成物として追跡から外す。
+- まず依存追加なしのnpm scriptsで、syntax checkとzip生成だけを整える。
