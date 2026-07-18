@@ -25,6 +25,23 @@
   }
 
   /**
+   * document/windowから現在のスクロール率を計算する。
+   *
+   * @param {{ scrollingElement?: { scrollTop: number } | null, documentElement: { scrollTop: number }, body: { scrollHeight: number } }} documentObject
+   * @param {{ innerHeight: number }} windowObject
+   * @returns {number | null}
+   */
+  function calculateDocumentProgress(documentObject, windowObject) {
+    var scrollingElement = documentObject.scrollingElement || documentObject.documentElement
+
+    return calculateProgress(
+      scrollingElement.scrollTop,
+      documentObject.body.scrollHeight,
+      windowObject.innerHeight
+    )
+  }
+
+  /**
    * 既知の不得意なbodyスクロール構成では動かさない。
    *
    * @param {{ overflowY: string }} bodyStyle
@@ -93,6 +110,7 @@
   global.ScrollProgressCore = {
     INDICATOR_ID: INDICATOR_ID,
     TOGGLE_MESSAGE_TYPE: TOGGLE_MESSAGE_TYPE,
+    calculateDocumentProgress: calculateDocumentProgress,
     calculateProgress: calculateProgress,
     keepIndicatorOutOfPageSelection: keepIndicatorOutOfPageSelection,
     normalizeEnabled: normalizeEnabled,

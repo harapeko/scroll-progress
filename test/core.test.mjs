@@ -25,6 +25,28 @@ test('calculateProgressはスクロールできないページでnullを返す',
   assert.equal(core.calculateProgress(0, 80, 100), null)
 })
 
+test('calculateDocumentProgressはdocument/windowからスクロール率を計算する', () => {
+  const documentObject = {
+    scrollingElement: { scrollTop: 75 },
+    documentElement: { scrollTop: 0 },
+    body: { scrollHeight: 400 },
+  }
+  const windowObject = { innerHeight: 100 }
+
+  assert.equal(core.calculateDocumentProgress(documentObject, windowObject), 25)
+})
+
+test('calculateDocumentProgressはscrollingElementがない場合にdocumentElementを使う', () => {
+  const documentObject = {
+    scrollingElement: null,
+    documentElement: { scrollTop: 60 },
+    body: { scrollHeight: 300 },
+  }
+  const windowObject = { innerHeight: 100 }
+
+  assert.equal(core.calculateDocumentProgress(documentObject, windowObject), 30)
+})
+
 test('shouldAttachIndicatorはbody overflow autoを既存どおり除外する', () => {
   assert.equal(core.shouldAttachIndicator({ overflowY: 'auto' }), false)
   assert.equal(core.shouldAttachIndicator({ overflowY: 'visible' }), true)

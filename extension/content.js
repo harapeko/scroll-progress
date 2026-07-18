@@ -11,12 +11,7 @@
       return
     }
 
-    var scrollingElement = document.scrollingElement || document.documentElement
-    var progress = core.calculateProgress(
-      scrollingElement.scrollTop,
-      document.body.scrollHeight,
-      window.innerHeight
-    )
+    var progress = core.calculateDocumentProgress(document, window)
 
     if (progress === null) {
       return
