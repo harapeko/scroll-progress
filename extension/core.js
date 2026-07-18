@@ -53,16 +53,6 @@
   }
 
   /**
-   * 既知の不得意なbodyスクロール構成では動かさない。
-   *
-   * @param {{ overflowY: string }} bodyStyle
-   * @returns {boolean}
-   */
-  function shouldAttachIndicator(bodyStyle) {
-    return bodyStyle.overflowY !== 'auto'
-  }
-
-  /**
    * content scriptへ送るtoggle messageを作る。
    *
    * @returns {{ type: string }}
@@ -184,7 +174,6 @@
     getIndicatorText,
     isToggleMessage,
     readEnabledResponse,
-    shouldAttachIndicator,
     throttle,
   }
 })(globalThis)

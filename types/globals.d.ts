@@ -33,7 +33,6 @@ declare global {
     getIndicatorText(progress: number): string
     isToggleMessage(message: unknown): boolean
     readEnabledResponse(response: unknown): boolean | null
-    shouldAttachIndicator(bodyStyle: { overflowY: string }): boolean
     throttle(callback: () => void, wait: number): () => void
   }
 

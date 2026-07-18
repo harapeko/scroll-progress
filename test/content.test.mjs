@@ -13,19 +13,23 @@ const source = fs.readFileSync(new URL('../extension/content.js', import.meta.ur
  * ) => void} RuntimeMessageListener
  */
 
+/** @typedef {(...args: never[]) => void} StoredEventListener */
+
 /**
- * @param {{ progress?: number, shouldAttach?: boolean }} [options]
+ * @param {{ progress?: number | null }} [options]
  */
 function runContentScript(options = {}) {
   /**
    * @type {{
    *   hidden: number,
+   *   elementSources: object[],
    *   shown: number,
    *   throttleWaits: number[],
    *   updated: number[]
    * }}
    */
   const calls = {
+    elementSources: [],
     hidden: 0,
     shown: 0,
     throttleWaits: [],
@@ -33,7 +37,7 @@ function runContentScript(options = {}) {
   }
   /**
    * @type {{
-   *   document: Map<string, () => void>,
+   *   document: Map<string, StoredEventListener>,
    *   runtime: RuntimeMessageListener | null,
    *   window: Map<string, () => void>
    * }}
@@ -44,15 +48,15 @@ function runContentScript(options = {}) {
     window: new Map(),
   }
   const indicatorElement = {}
-  const progress = options.progress ?? 25
-  const shouldAttach = options.shouldAttach ?? true
+  const progress = options.progress === undefined ? 25 : options.progress
+  class ElementStub {}
   const documentObject = {
     body: {},
     /** @type {object | null} */
     fullscreenElement: null,
     /**
      * @param {string} type
-     * @param {() => void} listener
+     * @param {StoredEventListener} listener
      */
     addEventListener(type, listener) {
       listeners.document.set(type, listener)
@@ -65,6 +69,11 @@ function runContentScript(options = {}) {
       calculateDocumentProgress() {
         return progress
       },
+      /** @param {{ progress?: number }} element */
+      calculateElementProgress(element) {
+        calls.elementSources.push(element)
+        return element.progress ?? null
+      },
       /** @param {boolean} enabled */
       createToggleResponse(enabled) {
         return { enabled }
@@ -72,9 +81,6 @@ function runContentScript(options = {}) {
       /** @param {{ type?: string } | null | undefined} message */
       isToggleMessage(message) {
         return message?.type === 'toggle-scroll-progress'
-      },
-      shouldAttachIndicator() {
-        return shouldAttach
       },
       /**
        * @param {() => void} callback
@@ -118,10 +124,8 @@ function runContentScript(options = {}) {
         },
       },
     },
+    Element: ElementStub,
     document: documentObject,
-    getComputedStyle() {
-      return { overflowY: 'visible' }
-    },
     window: {
       /**
        * @param {string} type
@@ -143,6 +147,10 @@ function runContentScript(options = {}) {
     setFullscreen(fullscreen) {
       documentObject.fullscreenElement = fullscreen ? {} : null
     },
+    /** @param {number} elementProgress */
+    createScrollElement(elementProgress) {
+      return Object.assign(new ElementStub(), { progress: elementProgress })
+    },
   }
 }
 
@@ -152,10 +160,40 @@ test('content scriptは対応ページで表示とlistener登録を開始する'
   assert.equal(typeof listeners.runtime, 'function')
   assert.equal(typeof listeners.document.get('fullscreenchange'), 'function')
   assert.equal(typeof listeners.window.get('load'), 'function')
-  assert.equal(typeof listeners.window.get('scroll'), 'function')
+  assert.equal(typeof listeners.document.get('scroll'), 'function')
   assert.deepEqual(calls.throttleWaits, [100])
   assert.equal(calls.shown, 1)
   assert.deepEqual(calls.updated, [40])
+})
+
+test('content scriptは最後にscrollされたelementの進捗を表示する', () => {
+  const { calls, createScrollElement, listeners } = runContentScript({ progress: null })
+  const scroll = /** @type {((event: { target: unknown }) => void) | undefined} */ (
+    listeners.document.get('scroll')
+  )
+  assert.ok(scroll)
+  const leftPane = createScrollElement(20)
+  const rightPane = createScrollElement(75)
+
+  scroll({ target: leftPane })
+  scroll({ target: rightPane })
+
+  assert.deepEqual(calls.elementSources, [leftPane, rightPane])
+  assert.deepEqual(calls.updated, [20, 75])
+  assert.equal(calls.shown, 2)
+})
+
+test('content scriptはDocumentのscrollへ戻る', () => {
+  const { calls, createScrollElement, listeners } = runContentScript({ progress: 45 })
+  const scroll = /** @type {((event: { target: unknown }) => void) | undefined} */ (
+    listeners.document.get('scroll')
+  )
+  assert.ok(scroll)
+
+  scroll({ target: createScrollElement(80) })
+  scroll({ target: {} })
+
+  assert.deepEqual(calls.updated, [45, 80, 45])
 })
 
 test('content scriptはFullscreen中に隠れて解除後に復帰する', () => {
@@ -198,13 +236,13 @@ test('content scriptはtoggle要求ごとに表示状態を反転する', () => 
   assert.deepEqual(calls.updated, [25, 25])
 })
 
-test('content scriptは対象外ページでlistenerを登録しない', () => {
-  const { calls, listeners } = runContentScript({ shouldAttach: false })
+test('content scriptはdocumentがscroll不可でもelement scrollを待つ', () => {
+  const { calls, listeners } = runContentScript({ progress: null })
 
-  assert.equal(listeners.runtime, null)
-  assert.equal(listeners.document.size, 0)
-  assert.equal(listeners.window.size, 0)
-  assert.deepEqual(calls.throttleWaits, [])
+  assert.equal(typeof listeners.runtime, 'function')
+  assert.equal(typeof listeners.document.get('scroll'), 'function')
+  assert.equal(typeof listeners.window.get('load'), 'function')
+  assert.deepEqual(calls.throttleWaits, [100])
   assert.equal(calls.shown, 0)
   assert.deepEqual(calls.updated, [])
 })

@@ -140,11 +140,6 @@ test('calculateElementProgressはelementの表示領域から進捗を計算す�
   )
 })
 
-test('shouldAttachIndicatorはbody overflow autoを既存どおり除外する', () => {
-  assert.equal(core.shouldAttachIndicator({ overflowY: 'auto' }), false)
-  assert.equal(core.shouldAttachIndicator({ overflowY: 'visible' }), true)
-})
-
 test('toggle messageの作成と判定を共有する', () => {
   const message = core.createToggleMessage()
 

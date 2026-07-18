@@ -5,6 +5,8 @@
   const indicator = globalThis.ScrollProgressIndicator
   const indicatorElement = indicator.create()
   let enabled = true
+  /** @type {Element | null} */
+  let activeScrollElement = null
 
   /**
    * 現在位置をindicatorへ反映する。
@@ -19,7 +21,9 @@
       return
     }
 
-    const progress = core.calculateDocumentProgress(document, window)
+    const progress = activeScrollElement
+      ? core.calculateElementProgress(activeScrollElement)
+      : core.calculateDocumentProgress(document, window)
 
     if (progress === null) {
       return
@@ -70,25 +74,32 @@
     sendResponse(core.createToggleResponse(toggleEnabled()))
   }
 
+  const throttledUpdateProgress = core.throttle(updateProgress, 100)
+
+  /**
+   * 最後に操作されたscroll areaを進捗sourceにする。
+   *
+   * @param {Event} event
+   */
+  function handleScroll(event) {
+    activeScrollElement = event.target instanceof Element ? event.target : null
+    throttledUpdateProgress()
+  }
+
   /**
    * 表示開始後に必要なlistenerを登録する。
    */
   function registerListeners() {
     chrome.runtime.onMessage.addListener(handleRuntimeMessage)
     document.addEventListener('fullscreenchange', updateProgress)
+    document.addEventListener('scroll', handleScroll, true)
     window.addEventListener('load', updateProgress)
-    window.addEventListener('scroll', core.throttle(updateProgress, 100))
   }
 
   /**
    * 対応できるページで進捗表示を開始する。
    */
   function start() {
-    // body側がスクロール本体になるページは、既存仕様どおり対象外にする。
-    if (!core.shouldAttachIndicator(getComputedStyle(document.body))) {
-      return
-    }
-
     registerListeners()
     updateProgress()
   }
