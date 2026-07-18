@@ -3,7 +3,8 @@ Scroll Progress
 
 A small chrome extension showing the scroll progress of current page.
 
-Scroll progress is always displayed at the bottom left.
+Scroll progress is displayed at the bottom left.
+Click the extension icon to hide or show it for the current tab.
 
 When is the timing?
 
@@ -20,7 +21,7 @@ The progress is shown at the lower left corner of the window.
 Install
 -----
 
-[chrome web store](https://chrome.google.com/webstore/detail/lcmhhnccfbeinmgacmomlkcahidhjifb/publish-accepted?hl=ja)
+[Chrome Web Store](https://chromewebstore.google.com/detail/scroll-progress/lcmhhnccfbeinmgacmomlkcahidhjifb)
 
 Incompatible
 ------------
