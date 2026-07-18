@@ -79,12 +79,13 @@ Scroll Progressを、手作業zipに依存せず検証・パッケージでき�
 | 9 | 公開用に拡張versionを上げる | 完了 | Mission 5 | 1.0.3から1.1.0 |
 | 10 | READMEからPrivacy Policyへ辿れるようにする | 完了 | Mission 7 | 公開ページ入力用 |
 | 11 | 拡張ソースとpackage名を分かりやすくする | 完了 | Mission 8 | `extension/`, `extension.zip` |
+| 12 | 進捗表示要素の生成責務を分ける | 完了 | Mission 11 | `indicator.js` |
 
 Mission一覧は初期仮説として扱う。実装結果に応じて追加、分割、統合、並べ替えを行ってよい。ただし、完了済みMissionの意味を後から別の成果へ変更しないこと。
 
 ## 現在のMission
 
-Mission 11は完了。次のMissionは未定。
+Mission 12は完了。次のMissionは未定。
 
 ## 未確定事項
 
@@ -104,3 +105,4 @@ Mission 11は完了。次のMissionは未定。
 - Mission 9では、ON/OFF機能追加を含む公開版としてmanifest versionを `1.1.0` に上げた。
 - Mission 10では、READMEにPrivacy Policyへのリンクを追加した。
 - Mission 11では、ソースディレクトリを `extension/` にし、生成zip名を `extension.zip` に統一した。
+- Mission 12では、進捗表示要素のDOM生成を `indicator.js` に分けた。

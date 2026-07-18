@@ -7,4 +7,4 @@ output="$repo_root/extension.zip"
 rm -f "$output"
 
 cd "$repo_root/extension"
-zip -r -X "$output" manifest.json background.js core.js scroll_progress.js icons screenshot.png
+zip -r -X "$output" manifest.json background.js core.js indicator.js scroll_progress.js icons screenshot.png
