@@ -12,6 +12,7 @@ The progress is displayed at the bottom left. Click the extension icon to hide o
 | Fixed shell with a scrollable body or panel | Follows the element after it starts scrolling. |
 | Multiple scrollable panes | Follows the pane that was scrolled most recently. |
 | Viewport resize | Recalculates the current scroll area. |
+| Active pane resize | Recalculates the active element without polling the page. |
 | Standard Fullscreen API | Hides during fullscreen and restores after fullscreen ends. |
 
 ```mermaid
@@ -32,11 +33,11 @@ flowchart LR
   end
 ```
 
-The extension starts with the document viewport. A scroll event from an element makes that element the active scroll area. In a multi-pane layout, the latest scrolled pane wins.
+The extension starts with the document viewport. A scroll event from an element with a vertical scroll range makes that element the active scroll area. In a multi-pane layout, the latest vertically scrolled pane wins. Horizontal-only scroll areas do not replace the current source.
 
 ```mermaid
 flowchart TD
-  event["load, scroll, resize, or fullscreenchange"] --> fullscreen{"Standard fullscreen active?"}
+  event["load, scroll, viewport resize,<br/>active element resize, or fullscreenchange"] --> fullscreen{"Standard fullscreen active?"}
   fullscreen -- Yes --> hide["Hide the indicator"]
   fullscreen -- No --> target{"Active scroll source"}
   target -- "Document or initial state" --> documentProgress["Calculate document progress"]
@@ -50,13 +51,13 @@ flowchart TD
 ## Limits
 
 - Horizontal scroll progress is not supported.
-- Scroll areas inside cross-origin iframes are not observed.
-- Scroll areas inside closed shadow roots are not observed.
+- Scroll areas inside iframes are not observed. The content script runs in the top frame only.
+- Scroll areas inside shadow roots are not observed.
 - Site-specific CSS pseudo-fullscreen modes are not detected.
 - Browser fullscreen started with F11 is not treated as content fullscreen.
 - Only one indicator is shown. It follows the most recently scrolled area.
 
-The behavior is based on the [CSSOM View Module](https://www.w3.org/TR/cssom-view/), [DOM Standard](https://dom.spec.whatwg.org/), and [Fullscreen Standard](https://fullscreen.spec.whatwg.org/).
+The behavior is based on the [CSSOM View Module](https://www.w3.org/TR/cssom-view/), [DOM Standard](https://dom.spec.whatwg.org/), [Resize Observer](https://www.w3.org/TR/resize-observer/), [Fullscreen Standard](https://fullscreen.spec.whatwg.org/), and the [Chrome content scripts manifest](https://developer.chrome.com/docs/extensions/reference/manifest/content-scripts).
 
 ## Screenshot
 
