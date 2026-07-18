@@ -105,6 +105,16 @@
   }
 
   /**
+   * badgeへ表示する文字を決める。
+   *
+   * @param {unknown} enabled
+   * @returns {string}
+   */
+  function getBadgeText(enabled) {
+    return normalizeEnabled(enabled) ? '' : 'OFF'
+  }
+
+  /**
    * ページ本文の選択やコピーに、拡張の表示文字を混ぜない。
    *
    * @param {{ setAttribute: Function, style: Object }} element
@@ -157,6 +167,7 @@
     calculateProgress: calculateProgress,
     createToggleMessage: createToggleMessage,
     createToggleResponse: createToggleResponse,
+    getBadgeText: getBadgeText,
     keepIndicatorOutOfPageSelection: keepIndicatorOutOfPageSelection,
     isToggleMessage: isToggleMessage,
     normalizeEnabled: normalizeEnabled,

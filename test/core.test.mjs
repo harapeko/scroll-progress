@@ -85,6 +85,12 @@ test('readEnabledResponseはresponseから有効状態を読む', () => {
   assert.equal(core.readEnabledResponse(null), null)
 })
 
+test('getBadgeTextはOFF時だけ表示文字を返す', () => {
+  assert.equal(core.getBadgeText(false), 'OFF')
+  assert.equal(core.getBadgeText(true), '')
+  assert.equal(core.getBadgeText(undefined), '')
+})
+
 test('keepIndicatorOutOfPageSelectionは拡張表示を本文コピーから外しやすくする', () => {
   const attributes = new Map()
   const element = {

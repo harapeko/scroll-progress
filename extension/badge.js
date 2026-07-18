@@ -1,9 +1,11 @@
 ;(function (global) {
   'use strict'
 
+  var core = global.ScrollProgressCore
+
   function update(tabId, enabled) {
     chrome.action.setBadgeBackgroundColor({ color: '#666666', tabId: tabId })
-    chrome.action.setBadgeText({ text: enabled ? '' : 'OFF', tabId: tabId })
+    chrome.action.setBadgeText({ text: core.getBadgeText(enabled), tabId: tabId })
   }
 
   function clear(tabId) {
