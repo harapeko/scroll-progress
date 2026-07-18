@@ -20,8 +20,9 @@
     }
 
     const progress = (scrollTop / scrollableHeight) * 100
+    const boundedProgress = Math.min(Math.max(progress, 0), 100)
 
-    return Math.round(Math.max(Math.min(progress, 100), 0))
+    return Math.round(boundedProgress)
   }
 
   /**
@@ -52,16 +53,6 @@
   }
 
   /**
-   * 明示的なfalse以外は、既定どおり表示する。
-   *
-   * @param {unknown} value
-   * @returns {boolean}
-   */
-  function normalizeEnabled(value) {
-    return value !== false
-  }
-
-  /**
    * content scriptへ送るtoggle messageを作る。
    *
    * @returns {{ type: string }}
@@ -77,22 +68,21 @@
    * @returns {boolean}
    */
   function isToggleMessage(message) {
-    return Boolean(
-      typeof message === 'object' &&
-        message !== null &&
-        'type' in message &&
-        message.type === TOGGLE_MESSAGE_TYPE
-    )
+    if (typeof message !== 'object' || message === null || !('type' in message)) {
+      return false
+    }
+
+    return message.type === TOGGLE_MESSAGE_TYPE
   }
 
   /**
    * toggle後の状態をresponseとして返す。
    *
-   * @param {unknown} enabled
+   * @param {boolean} enabled
    * @returns {{ enabled: boolean }}
    */
   function createToggleResponse(enabled) {
-    return { enabled: normalizeEnabled(enabled) }
+    return { enabled }
   }
 
   /**
@@ -105,23 +95,23 @@
     if (
       typeof response !== 'object' ||
       response === null ||
-      !('enabled' in response) ||
-      typeof response.enabled === 'undefined'
+        !('enabled' in response) ||
+        typeof response.enabled !== 'boolean'
     ) {
       return null
     }
 
-    return normalizeEnabled(response.enabled)
+    return response.enabled
   }
 
   /**
    * badgeへ表示する文字を決める。
    *
-   * @param {unknown} enabled
+   * @param {boolean} enabled
    * @returns {string}
    */
   function getBadgeText(enabled) {
-    return normalizeEnabled(enabled) ? '' : 'OFF'
+    return enabled ? '' : 'OFF'
   }
 
   /**
@@ -131,7 +121,7 @@
    * @returns {string}
    */
   function getIndicatorText(progress) {
-    return progress + ' %'
+    return `${progress} %`
   }
 
   /**
@@ -184,19 +174,17 @@
 
   // noinspection JSUnusedGlobalSymbols -- manifest経由で別scriptから参照する。
   global.ScrollProgressCore = {
-    INDICATOR_ID: INDICATOR_ID,
-    TOGGLE_MESSAGE_TYPE: TOGGLE_MESSAGE_TYPE,
-    calculateDocumentProgress: calculateDocumentProgress,
-    calculateProgress: calculateProgress,
-    createToggleMessage: createToggleMessage,
-    createToggleResponse: createToggleResponse,
-    getBadgeText: getBadgeText,
-    getIndicatorText: getIndicatorText,
-    keepIndicatorOutOfPageSelection: keepIndicatorOutOfPageSelection,
-    isToggleMessage: isToggleMessage,
-    normalizeEnabled: normalizeEnabled,
-    readEnabledResponse: readEnabledResponse,
-    shouldAttachIndicator: shouldAttachIndicator,
-    throttle: throttle,
+    INDICATOR_ID,
+    calculateDocumentProgress,
+    calculateProgress,
+    createToggleMessage,
+    createToggleResponse,
+    getBadgeText,
+    getIndicatorText,
+    keepIndicatorOutOfPageSelection,
+    isToggleMessage,
+    readEnabledResponse,
+    shouldAttachIndicator,
+    throttle,
   }
 })(globalThis)

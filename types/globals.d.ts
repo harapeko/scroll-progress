@@ -22,7 +22,6 @@ declare global {
 
   interface ScrollProgressCoreApi {
     readonly INDICATOR_ID: string
-    readonly TOGGLE_MESSAGE_TYPE: string
     calculateDocumentProgress(
       documentObject: ScrollProgressDocument,
       windowObject: { innerHeight: number },
@@ -33,12 +32,11 @@ declare global {
       viewportHeight: number,
     ): number | null
     createToggleMessage(): { type: string }
-    createToggleResponse(enabled: unknown): { enabled: boolean }
-    getBadgeText(enabled: unknown): string
+    createToggleResponse(enabled: boolean): { enabled: boolean }
+    getBadgeText(enabled: boolean): string
     getIndicatorText(progress: number): string
     isToggleMessage(message: unknown): boolean
     keepIndicatorOutOfPageSelection(element: IndicatorSelectionElement): void
-    normalizeEnabled(value: unknown): boolean
     readEnabledResponse(response: unknown): boolean | null
     shouldAttachIndicator(bodyStyle: { overflowY: string }): boolean
     throttle(callback: () => void, wait: number): () => void

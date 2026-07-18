@@ -46,17 +46,13 @@ function runContentScript(options = {}) {
       calculateDocumentProgress() {
         return progress
       },
-      /** @param {unknown} enabled */
+      /** @param {boolean} enabled */
       createToggleResponse(enabled) {
         return { enabled }
       },
       /** @param {{ type?: string } | null | undefined} message */
       isToggleMessage(message) {
         return message?.type === 'toggle-scroll-progress'
-      },
-      /** @param {unknown} value */
-      normalizeEnabled(value) {
-        return value !== false
       },
       shouldAttachIndicator() {
         return shouldAttach

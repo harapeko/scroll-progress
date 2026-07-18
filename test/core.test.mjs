@@ -128,18 +128,6 @@ test('shouldAttachIndicatorはbody overflow autoを既存どおり除外する',
   assert.equal(core.shouldAttachIndicator({ overflowY: 'visible' }), true)
 })
 
-test('normalizeEnabledはfalseだけを無効扱いにする', () => {
-  assert.equal(core.normalizeEnabled(false), false)
-  assert.equal(core.normalizeEnabled(true), true)
-  assert.equal(core.normalizeEnabled(undefined), true)
-  assert.equal(core.normalizeEnabled(null), true)
-  assert.equal(core.normalizeEnabled('off'), true)
-})
-
-test('TOGGLE_MESSAGE_TYPEはcontent scriptとbackgroundで共有する', () => {
-  assert.equal(core.TOGGLE_MESSAGE_TYPE, 'toggle-scroll-progress')
-})
-
 test('toggle messageの作成と判定を共有する', () => {
   const message = core.createToggleMessage()
 
@@ -152,18 +140,16 @@ test('toggle messageの作成と判定を共有する', () => {
   assert.equal(core.isToggleMessage('toggle-scroll-progress'), false)
 })
 
-test('toggle responseはenabledを正規化して返す', () => {
+test('toggle responseはbooleanのenabledをそのまま返す', () => {
   assert.equal(core.createToggleResponse(false).enabled, false)
   assert.equal(core.createToggleResponse(true).enabled, true)
-  assert.equal(core.createToggleResponse(undefined).enabled, true)
-  assert.equal(core.createToggleResponse(null).enabled, true)
 })
 
 test('readEnabledResponseはresponseから有効状態を読む', () => {
   assert.equal(core.readEnabledResponse({ enabled: false }), false)
   assert.equal(core.readEnabledResponse({ enabled: true }), true)
-  assert.equal(core.readEnabledResponse({ enabled: null }), true)
-  assert.equal(core.readEnabledResponse({ enabled: 'unexpected' }), true)
+  assert.equal(core.readEnabledResponse({ enabled: null }), null)
+  assert.equal(core.readEnabledResponse({ enabled: 'unexpected' }), null)
   assert.equal(core.readEnabledResponse({ enabled: undefined }), null)
   assert.equal(core.readEnabledResponse({}), null)
   assert.equal(core.readEnabledResponse(null), null)
@@ -174,7 +160,6 @@ test('readEnabledResponseはresponseから有効状態を読む', () => {
 test('getBadgeTextはOFF時だけ表示文字を返す', () => {
   assert.equal(core.getBadgeText(false), 'OFF')
   assert.equal(core.getBadgeText(true), '')
-  assert.equal(core.getBadgeText(undefined), '')
 })
 
 test('getIndicatorTextは進捗値に単位を付ける', () => {

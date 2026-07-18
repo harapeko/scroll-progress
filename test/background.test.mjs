@@ -63,7 +63,7 @@ function runBackgroundScript() {
           return null
         }
 
-        return response.enabled !== false
+        return typeof response.enabled === 'boolean' ? response.enabled : null
       },
     },
     chrome: {
@@ -152,6 +152,18 @@ test('service workerはresponseが不正な場合に古いbadgeを消す', () =>
 
   assert.deepEqual(calls.badgeUpdates, [])
   assert.deepEqual(calls.badgeClears, [22])
+})
+
+test('service workerはenabledがbooleanでないresponseを反映しない', () => {
+  const { calls, listeners, respond } = runBackgroundScript()
+  const actionClick = listeners.actionClick
+  assert.ok(actionClick)
+
+  actionClick({ id: 23 })
+  respond({ enabled: null })
+
+  assert.deepEqual(calls.badgeUpdates, [])
+  assert.deepEqual(calls.badgeClears, [23])
 })
 
 test('service workerはtab idがないclickを送信しない', () => {

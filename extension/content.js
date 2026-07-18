@@ -27,10 +27,10 @@
   /**
    * このタブ内の表示状態を切り替える。
    *
-   * @param {unknown} value
+   * @param {boolean} nextEnabled
    */
-  function applyEnabled(value) {
-    enabled = core.normalizeEnabled(value)
+  function applyEnabled(nextEnabled) {
+    enabled = nextEnabled
 
     if (!enabled) {
       indicator.hide(indicatorElement)
