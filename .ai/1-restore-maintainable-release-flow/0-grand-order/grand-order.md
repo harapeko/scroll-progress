@@ -82,12 +82,13 @@ Scroll Progressを、手作業zipに依存せず検証・パッケージでき�
 | 12 | 進捗表示要素の生成責務を分ける | 完了 | Mission 11 | `indicator.js` |
 | 13 | 進捗表示DOM操作をindicatorへ寄せる | 完了 | Mission 12 | 本体は状態と更新に集中 |
 | 14 | content scriptのファイル名を役割名にする | 完了 | Mission 13 | `content.js` |
+| 15 | badge操作をservice worker本体から分ける | 完了 | Mission 14 | `badge.js` |
 
 Mission一覧は初期仮説として扱う。実装結果に応じて追加、分割、統合、並べ替えを行ってよい。ただし、完了済みMissionの意味を後から別の成果へ変更しないこと。
 
 ## 現在のMission
 
-Mission 14は完了。次のMissionは未定。
+Mission 15は完了。次のMissionは未定。
 
 ## 未確定事項
 
@@ -110,3 +111,4 @@ Mission 14は完了。次のMissionは未定。
 - Mission 12では、進捗表示要素のDOM生成を `indicator.js` に分けた。
 - Mission 13では、表示要素のshow/hide/updateも `indicator.js` に寄せた。
 - Mission 14では、content script本体を `scroll_progress.js` から `content.js` に改名した。
+- Mission 15では、badge表示の更新と消去を `badge.js` に分けた。
