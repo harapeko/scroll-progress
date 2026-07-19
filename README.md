@@ -4,6 +4,8 @@ A small Chrome extension that shows the vertical scroll progress of the area you
 
 The progress is displayed at the bottom left. Click the extension icon to hide or show it for the current tab.
 
+The extension runs on HTTP and HTTPS pages.
+
 ## Supported Layouts
 
 | Layout | Behavior |
@@ -56,6 +58,8 @@ flowchart TD
 - Site-specific CSS pseudo-fullscreen modes are not detected.
 - Browser fullscreen started with F11 is not treated as content fullscreen.
 - Only one indicator is shown. It follows the most recently scrolled area.
+- Local `file://` pages are not supported.
+- Chrome's built-in PDF viewer is not supported.
 
 The behavior is based on the [CSSOM View Module](https://www.w3.org/TR/cssom-view/), [DOM Standard](https://dom.spec.whatwg.org/), [Resize Observer](https://www.w3.org/TR/resize-observer/), [Fullscreen Standard](https://fullscreen.spec.whatwg.org/), and the [Chrome content scripts manifest](https://developer.chrome.com/docs/extensions/reference/manifest/content-scripts).
 
